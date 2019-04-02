@@ -12,7 +12,9 @@ class Sidebar extends Component {
             <div id="main-menu" className="main-menu collapse navbar-collapse">
               <ul className="nav navbar-nav">
                 <li className="active">
-                  <a href="index.html"><i className="menu-icon fa fa-laptop" />Dashboard </a>
+                  <h3>
+                    <Link to="/homepage">DASHBOARD</Link>
+                  </h3>
                 </li>
                 <li className="menu-item-has-children dropdown">
                   <a href="none" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-cogs" />Elements</a>
@@ -53,7 +55,6 @@ class Sidebar extends Component {
             </div>
           </nav>
         </aside>
-        {/* /#left-panel */}
       </div>
     );
   }
