@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { user } from '../../../api/userapi';
+import { getUser } from '../../../api/userapi';
 
 class ManageUser extends Component {
 
@@ -13,8 +13,7 @@ class ManageUser extends Component {
 
   componentDidMount() {
     if (this.state.users.length === 0) {
-      user().then(res => {
-        console.log(res.data)
+      getUser().then(res => {
         this.setState({ users: res.data })
       });
     }
@@ -25,18 +24,18 @@ class ManageUser extends Component {
     return (
       <div>
         <Sidebar />
+        {/* Manage User */}
         <div id="right-panel" className="right-panel">
-          <div className="content">
-            {/* Manage User */}
-            <div className="row">
-              <div className="col-xl-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="box-title">Manage User</h4>
-                  </div>
-                  <div className="card-body--">
-                    <div className="table-stats order-table ov-h">
-                      <table className="table ">
+          <div class="content">
+            <div class="animated fadeIn">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <strong class="card-title">Manage User</strong>
+                    </div>
+                    <div class="card-body">
+                      <table id="bootstrap-data-table" class="table table-striped table-bordered">
                         <thead>
                           <tr>
                             <th>ID</th>
@@ -46,20 +45,24 @@ class ManageUser extends Component {
                             <th>Address</th>
                             <th>ID card</th>
                             <th>Role</th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         {
                           users.length > 0 && (
-                            users.map((user, index) => {
-                              return <tbody key = {index}>
+                            users.map((getUser, index) => {
+                              return <tbody key={index}>
                                 <tr>
-                                  <td> {user.id} </td>
-                                  <td> {user.email} </td>
-                                  <td> {user.fullname} </td>
-                                  <td> {user.phone_number} </td>
-                                  <td> {user.address} </td>
-                                  <td> {user.id_card_number} </td>
+                                  <td> {getUser.id} </td>
+                                  <td> {getUser.email} </td>
+                                  <td> {getUser.fullname} </td>
+                                  <td> {getUser.phone_number} </td>
+                                  <td> {getUser.address} </td>
+                                  <td> {getUser.id_card_number} </td>
                                   <td> #5469 </td>
+                                  <td>
+                                    <a href="none" class="ml-3 fa fa-trash"></a>
+                                  </td>
                                 </tr>
                               </tbody>
                             })
