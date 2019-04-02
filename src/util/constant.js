@@ -1,0 +1,1 @@
+export const HEROKU_URL = "https://capstone2-api.herokuapp.com"

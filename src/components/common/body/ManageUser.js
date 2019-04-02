@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import { user } from '../../../api/userapi';
 
 class ManageUser extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: []
+    }
+  }
+
+  componentDidMount() {
+    if (this.state.users.length === 0) {
+      user().then(res => {
+        console.log(res.data)
+        this.setState({ users: res.data })
+      });
+    }
+  }
+
   render() {
+    const { users } = this.state;
     return (
       <div>
         <Sidebar />
@@ -21,27 +40,31 @@ class ManageUser extends Component {
                         <thead>
                           <tr>
                             <th>ID</th>
-                            <th>User name</th>
-                            <th>Full name</th>
                             <th>Email</th>
+                            <th>Full name</th>
                             <th>Phone number</th>
                             <th>Address</th>
                             <th>ID card</th>
                             <th>Role</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td> #5469 </td>
-                            <td>Louis Stanley</td>
-                            <td> #5469 </td>
-                            <td>Louis Stanley</td>
-                            <td> #5469 </td>
-                            <td>Louis Stanley</td>
-                            <td> #5469 </td>
-                            <td>Louis Stanley</td>
-                          </tr>
-                        </tbody>
+                        {
+                          users.length > 0 && (
+                            users.map((user, index) => {
+                              return <tbody key = {index}>
+                                <tr>
+                                  <td> {user.id} </td>
+                                  <td> {user.email} </td>
+                                  <td> {user.fullname} </td>
+                                  <td> {user.phone_number} </td>
+                                  <td> {user.address} </td>
+                                  <td> {user.id_card_number} </td>
+                                  <td> #5469 </td>
+                                </tr>
+                              </tbody>
+                            })
+                          )
+                        }
                       </table>
                     </div>
                   </div>

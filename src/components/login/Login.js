@@ -1,7 +1,41 @@
 import React, { Component } from 'react';
-import {withRouter} from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
+import { login } from '../../api/userapi'
 
 class Login extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: ''
+    }
+  }
+
+  handleChangeEmail = event => {
+    this.setState({ email: event.target.value });
+  }
+
+  handleChangePassword = event => {
+    this.setState({ password: event.target.value });
+  }
+
+  handleSubmit() {
+    const { email, password } = this.state;
+    login({
+      "email": `${this.state.email}`,
+      "password": `${this.state.password}`
+    }).then(res => {
+      if (res.data.message) {
+        return < Redirect to= '/homepage' />
+      } else {
+        console.log("not");
+      }
+    }).catch(err => {
+
+    })
+  }
+
   render() {
     return (
       <div>
@@ -17,18 +51,18 @@ class Login extends Component {
                 <form>
                   <div className="form-group">
                     <label>Email address</label>
-                    <input type="email" className="form-control" placeholder="Email" />
+                    <input onChange={this.handleChangeEmail} type="email" className="form-control" placeholder="Email" />
                   </div>
                   <div className="form-group">
                     <label>Password</label>
-                    <input type="password" className="form-control" placeholder="Password" />
+                    <input onChange={this.handleChangePassword} type="password" className="form-control" placeholder="Password" />
                   </div>
                   <div className="checkbox">
                     <label>
                       <input type="checkbox" /> Remember Me
                     </label>
                   </div>
-                  <button type="submit" className="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
+                  <button onClick={this.handleSubmit} type="submit" className="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
                 </form>
               </div>
             </div>
