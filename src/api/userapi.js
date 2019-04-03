@@ -10,3 +10,8 @@ export async function getUser(){
     const url = `${HEROKU_URL}/users`;
     return await axios.get(url);
 }
+
+export async function deleteUser(id){
+    const url = `${HEROKU_URL}/users/${id}`;
+    return await axios.delete(url);
+}
