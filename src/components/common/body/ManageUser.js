@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getUser } from '../../../api/userapi';
+import { getUser, deleteUser } from '../../../api/userapi';
+import { Modal, Button } from 'react-bootstrap';
 
 class ManageUser extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      shouldShow: false,
+      selectIdUser: ''
     }
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -19,6 +25,30 @@ class ManageUser extends Component {
     }
   }
 
+  
+
+  handleShow = (id) => {
+    this.setState({
+      selectIdUser: id,
+      shouldShow: true
+    })
+  }
+
+  handleClose(){
+    this.setState({
+      shouldShow: false
+    })
+  }
+
+  handleDelete(){
+    deleteUser(this.state.selectIdUser).then(res => {
+      getUser().then(res => {
+        this.setState({ users: res.data })
+      });
+    })
+    this.handleClose()
+  }
+
   render() {
     const { users } = this.state;
     return (
@@ -26,16 +56,16 @@ class ManageUser extends Component {
         <Sidebar />
         {/* Manage User */}
         <div id="right-panel" className="right-panel">
-          <div class="content">
-            <div class="animated fadeIn">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <strong class="card-title">Manage User</strong>
+          <div className="content">
+            <div className="animated fadeIn">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-header">
+                      <strong className="card-title">Manage User</strong>
                     </div>
-                    <div class="card-body">
-                      <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                    <div className="card-body">
+                      <table id="bootstrap-data-table" className="table table-striped table-bordered">
                         <thead>
                           <tr>
                             <th>ID</th>
@@ -61,7 +91,7 @@ class ManageUser extends Component {
                                   <td> {getUser.id_card_number} </td>
                                   <td> #5469 </td>
                                   <td>
-                                    <a href="none" class="ml-3 fa fa-trash"></a>
+                                    <button onClick={() => { this.handleShow(getUser.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
@@ -76,6 +106,20 @@ class ManageUser extends Component {
             </div>
           </div>
         </div>
+        <Modal show={this.state.shouldShow} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete This Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Close
+                        </Button>
+            <Button variant="primary" onClick={this.handleDelete}>
+              Delete
+                        </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

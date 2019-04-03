@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { HEROKU_URL } from '../../../util/constant';
-import axios from 'axios';
 import { getCategories, addCategories, deleteCategories } from '../../../api/categoriesapi';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -49,7 +47,6 @@ class ManageCate extends Component {
       selectedID: id,
       shouldShow: true
     })
-    console.log(this.state.selectedID)
   }
 
   handleClose() {
