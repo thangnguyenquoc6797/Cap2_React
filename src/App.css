@@ -2504,3 +2504,12 @@ footer.site-footer {
     right: 20px !important; }
 
 /*# sourceMappingURL=style.css.map */
+
+#AddButton{
+  margin-left: 20px;
+}
+
+#linkupdate{
+  padding-left: unset;
+  padding-right: unset;
+}

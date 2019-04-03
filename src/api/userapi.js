@@ -6,7 +6,7 @@ export async function login(credentails){
     return await axios.post(url, credentails);
 }
 
-export async function user(){
+export async function getUser(){
     const url = `${HEROKU_URL}/users`;
     return await axios.get(url);
 }
