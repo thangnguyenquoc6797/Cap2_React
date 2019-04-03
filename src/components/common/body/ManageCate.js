@@ -105,7 +105,7 @@ class ManageCate extends Component {
                 <div className="col-md-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong className="card-title">Manage User</strong>
+                      <strong className="card-title">Manage Categories</strong>
                       {
                         btnAdd
                       }

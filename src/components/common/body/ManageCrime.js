@@ -1,23 +1,42 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import {getCrimeReports} from '../../../api/crimesapi';
 
 class ManageCrime extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      crimes: []
+    }
+  }
+
+  componentDidMount(){
+    if (this.state.crimes.length === 0) {
+      getCrimeReports().then(res => {
+        this.setState({ crimes: res.data })
+        console.log(res.data)
+      })
+    }
+  }
+
   render() {
+    const {crimes} = this.state;
     return (
       <div>
         <Sidebar />
-        {/* Missing Crime */}
+        {/* Manage Cate */}
         <div id="right-panel" className="right-panel">
           <div className="content">
-            <div className="row">
-              <div className="col-xl-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="box-title">Crime Report</h4>
-                  </div>
-                  <div className="card-body--">
-                    <div className="table-stats order-table ov-h">
-                      <table className="table ">
+            <div className="animated fadeIn">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-header">
+                      <strong className="card-title">Manage Crime Report</strong>
+                      <button id="AddButton" type="button" className="btn btn-primary">Add Crime Report</button>
+                    </div>
+                    <div className="card-body">
+                      <table id="bootstrap-data-table" className="table table-striped table-bordered">
                         <thead>
                           <tr>
                             <th>ID</th>
@@ -27,25 +46,33 @@ class ManageCrime extends Component {
                             <th>Description</th>
                             <th>Time</th>
                             <th>Category</th>
+                            <th>User</th>
+                            <th>Action</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td> #5469 </td>
-                            <td className="avatar">
-                              <div className="round-img">
-                                {/* &lt;%= link_to "#" do %&gt;
-                                    &lt;%= image_tag "avatar/1.jpg", class: "rounded-circle" %&gt;
-                                    &lt;% end %&gt; */}
-                              </div>
-                            </td>
-                            <td>  <span className="name">Louis Stanley</span> </td>
-                            <td> <span className="product">iMax</span> </td>
-                            <td><span className="count">231</span></td>
-                            <td><span className="count">231</span></td>
-                            <td><span className="count">...</span></td>
-                          </tr>
-                        </tbody>
+                        {
+                          crimes.length > 0 && (
+                            crimes.map((getCrimeReports, index) => {
+                              return <tbody key={index}>
+                              <tr>
+                                <td> {getCrimeReports.id} </td>
+                                <td>  </td>
+                                <td> {getCrimeReports.area} </td>
+                                <td> {getCrimeReports.title} </td>
+                                <td> {getCrimeReports.description} </td>
+                                <td> ádasdasd </td>
+                                <td> ádasdasd </td>
+                                <td> ádasdasd </td>
+                                <td>
+                                  <button className="ml-3 fa fa-edit"></button>
+                                  <button className="ml-3 fa fa-trash"></button>
+                                </td>
+                              </tr>
+                            </tbody>
+                            })
+                          )
+                        }
+                        
                       </table>
                     </div>
                   </div>
