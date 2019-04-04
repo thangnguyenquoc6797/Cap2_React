@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import Sidebar from '../sidebar/Sidebar';
-import { getCategories, addCategories, deleteCategories } from '../../../api/categoriesapi';
-import { Modal, Button } from 'react-bootstrap';
+import { getCategories, addCategories, deleteCategories, editCategory, getCategoriesbyID } from '../../../api/categoriesapi';
+import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 class ManageCate extends Component {
   constructor(props) {
@@ -10,14 +12,19 @@ class ManageCate extends Component {
       category_name: '',
       categories: [],
       isShowCategory: true,
-      shouldShow: false,
-      selectedID: ''
+      shouldShowDelete: false,
+      shouldShowEdit: false,
+      selectedID: '',
+      selectedName: ''
     }
     this.handShowInputCategory = this.handShowInputCategory.bind(this);
     this.handleAddCate = this.handleAddCate.bind(this);
-    this.handleShow = this.handleShow.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handleShowDelete = this.handleShowDelete.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleShowEdit = this.handleShowEdit.bind(this);
+    this.handleCloseEdit = this.handleCloseEdit.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -42,16 +49,17 @@ class ManageCate extends Component {
     })
   }
 
-  handleShow = (id) => {
+  /* Modal pop up delete */
+  handleShowDelete = (id) => {
     this.setState({
       selectedID: id,
-      shouldShow: true
+      shouldShowDelete: true
     })
   }
 
-  handleClose() {
+  handleCloseDelete() {
     this.setState({
-      shouldShow: false
+      shouldShowDelete: false
     })
   }
 
@@ -63,8 +71,59 @@ class ManageCate extends Component {
       );
     }
     );
-    this.handleClose()
+    this.handleCloseDelete()
   }
+
+  /* Modal show edit */
+
+  handleShowEdit = (id) => {
+    getCategoriesbyID(id).then(res => {
+      console.log(res.data)
+      this.setState({
+        selectedID: id,
+        selectedName: res.data.name_category,
+        shouldShowEdit: true
+      })
+    }
+    );
+  }
+
+  // handleShowEdit = (id, name) => {
+  //   this.setState({
+  //     selectedID: id,
+  //     selectedName: name,
+  //     shouldShowEdit: true
+  //   })
+  // }
+
+  handleCloseEdit() {
+    this.setState({
+      shouldShowEdit: false
+    })
+  }
+
+  handleChangInputEditCate = event => {
+    this.setState({
+      selectedName: event.target.value
+    })
+  }
+
+  handleEdit() {
+    const categoriesName = {};
+    if (this.state.selectedName.length > 0) {
+      categoriesName['name_category'] = this.state.selectedName;
+      editCategory(this.state.selectedID, categoriesName).then(res => {
+        getCategories().then(res => {
+          this.setState({ categories: res.data })
+        });
+      });
+    }
+    this.handleCloseEdit()
+  }
+
+
+
+
 
   handleAddCate() {
     const categories = {};
@@ -94,6 +153,7 @@ class ManageCate extends Component {
     } else {
       btnAdd = <button onClick={this.handShowInputCategory} id="AddButton" type="button" className="btn btn-warning">Cancle</button>
     }
+
     return (
       <div>
         <Sidebar />
@@ -105,7 +165,7 @@ class ManageCate extends Component {
                 <div className="col-md-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong className="card-title">Manage User</strong>
+                      <strong className="card-title">Manage Categories</strong>
                       {
                         btnAdd
                       }
@@ -136,15 +196,14 @@ class ManageCate extends Component {
                                   <td> {getCategories.id} </td>
                                   <td> {getCategories.name_category} </td>
                                   <td>
-                                    <a href="none" className="ml-3 fa fa-edit"></a>
-                                    <button onClick={() => { this.handleShow(getCategories.id) }} className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowEdit(getCategories.id, getCategories.name_category) }} className="ml-3 fa fa-edit"></button>
+                                    <button onClick={() => { this.handleShowDelete(getCategories.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
                             })
                           )
                         }
-
                       </table>
                     </div>
                   </div>
@@ -153,13 +212,14 @@ class ManageCate extends Component {
             </div>
           </div>
         </div>
-        <Modal show={this.state.shouldShow} onHide={this.handleClose}>
+        {/* Modal show delete */}
+        <Modal show={this.state.shouldShowDelete} onHide={this.handleCloseDelete}>
           <Modal.Header closeButton>
             <Modal.Title>Delete This Category</Modal.Title>
           </Modal.Header>
           <Modal.Body>Are you sure?</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="secondary" onClick={this.handleCloseDelete}>
               Close
                         </Button>
             <Button variant="primary" onClick={this.handleDelete}>
@@ -167,8 +227,37 @@ class ManageCate extends Component {
                         </Button>
           </Modal.Footer>
         </Modal>
+
+        {/* Modal show edit */}
+        <Modal show={this.state.shouldShowEdit} onHide={this.handleCloseEdit}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit This Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroup-sizing-default">{this.state.selectedID}</InputGroup.Text>
+              </InputGroup.Prepend>
+              <FormControl
+                aria-label="Default"
+                aria-describedby="inputGroup-sizing-default"
+                value={this.state.selectedName}
+                onChange={this.handleChangInputEditCate}
+              />
+
+            </InputGroup>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseEdit}>
+              Close
+                        </Button>
+            <Button variant="primary" onClick={this.handleEdit}>
+              Edit
+                        </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
 }
-export default ManageCate;
+export default withRouter(ManageCate);
