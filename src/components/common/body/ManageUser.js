@@ -25,8 +25,6 @@ class ManageUser extends Component {
     }
   }
 
-  
-
   handleShow = (id) => {
     this.setState({
       selectIdUser: id,
