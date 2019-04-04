@@ -15,3 +15,13 @@ export async function deleteCategories(id){
     const url = `${HEROKU_URL}/categories/${id}`;
     return await axios.delete(url);
 }
+
+export async function editCategory(id, category){
+    const url = `${HEROKU_URL}/categories/${id}`;
+    return await axios.put(url, category);
+}
+
+export async function getCategoriesbyID(id){
+    const url = `${HEROKU_URL}/categories/${id}`;
+    return await axios.get(url);
+}

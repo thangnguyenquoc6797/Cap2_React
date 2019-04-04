@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import {withRouter} from'react-router-dom';
-import { BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Homepage from './Homepage';
 import Login from './components/login/Login';
@@ -25,6 +25,7 @@ class App extends Component {
         <Route path="/hotlines" component={ManageHotline} />
         <Route path="/comments" component={ManageComment} />
       </Switch>
+
     );
   }
 }
