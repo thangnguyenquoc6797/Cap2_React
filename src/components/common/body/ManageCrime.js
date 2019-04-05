@@ -60,9 +60,9 @@ class ManageCrime extends Component {
                                 <td> {getCrimeReports.area} </td>
                                 <td> {getCrimeReports.title} </td>
                                 <td> {getCrimeReports.description} </td>
-                                <td> ádasdasd </td>
-                                <td> ádasdasd </td>
-                                <td> ádasdasd </td>
+                                <td> {getCrimeReports.created_at} </td>
+                                <td> {getCrimeReports.category_id} </td>
+                                <td> {getCrimeReports.user_id} </td>
                                 <td>
                                   <button className="ml-3 fa fa-edit"></button>
                                   <button className="ml-3 fa fa-trash"></button>
