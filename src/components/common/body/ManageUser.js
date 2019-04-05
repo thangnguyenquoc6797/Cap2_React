@@ -87,7 +87,7 @@ class ManageUser extends Component {
                                   <td> {getUser.phone_number} </td>
                                   <td> {getUser.address} </td>
                                   <td> {getUser.id_card_number} </td>
-                                  <td> #5469 </td>
+                                  <td> {getUser.role_id} </td>
                                   <td>
                                     <button onClick={() => { this.handleShow(getUser.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
