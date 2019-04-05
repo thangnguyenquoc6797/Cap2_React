@@ -3,6 +3,11 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 
 class Sidebar extends Component {
+
+  handleLogout(){
+    sessionStorage.removeItem('user_id');
+  }
+
   render() {
     return (
       <div>
@@ -47,7 +52,7 @@ class Sidebar extends Component {
                       <a href="none">User Information</a>
                     </li>
                     <li><i className="menu-icon fa fa-paper-plane" />
-                      <a href="none">Logout</a>
+                      <Link onClick={this.handleLogout} to="/">Logout</Link>
                     </li>
                   </ul>
                 </li>

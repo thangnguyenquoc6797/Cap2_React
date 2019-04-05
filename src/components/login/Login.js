@@ -20,16 +20,29 @@ class Login extends Component {
     this.setState({ password: event.target.value });
   }
 
-  handleSubmit() {
+  handleSubmit = event => {
+    event.preventDefault();
     const { email, password } = this.state;
-    login({
-      "email": `${this.state.email}`,
-      "password": `${this.state.password}`
-    }).then(res => {
-      if (res.data.message) {
-        return < Redirect to= '/homepage' />
-      } else {
-        console.log("not");
+    const credentials = {};
+    const {history} = this.props;
+    let message = '';
+    let role_id = '';
+    let user_id = '';
+    credentials["email"] = email;
+    credentials["password"] = password;
+    login(credentials).then(res => {
+      res.data.map(value => {
+        role_id = value.role_id
+        message = value.message
+        user_id = value.id
+      })
+      if (message === "success" && role_id === 1) {
+        sessionStorage.setItem("user_id", user_id);
+        history.push('/homepage');
+      }else if(message === "success" && role_id !== 1){
+        alert("You don't have permission");
+      }else {
+        alert("Login not success");
       }
     }).catch(err => {
 
@@ -62,7 +75,7 @@ class Login extends Component {
                       <input type="checkbox" /> Remember Me
                     </label>
                   </div>
-                  <button onClick={this.handleSubmit} type="submit" className="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
+                  <button onClick={this.handleSubmit} className="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
                 </form>
               </div>
             </div>
