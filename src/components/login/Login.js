@@ -24,7 +24,7 @@ class Login extends Component {
     event.preventDefault();
     const { email, password } = this.state;
     const credentials = {};
-    const {history} = this.props;
+    const { history } = this.props;
     let message = '';
     let role_id = '';
     let user_id = '';
@@ -39,9 +39,9 @@ class Login extends Component {
       if (message === "success" && role_id === 1) {
         sessionStorage.setItem("user_id", user_id);
         history.push('/homepage');
-      }else if(message === "success" && role_id !== 1){
+      } else if (message === "success" && role_id !== 1) {
         alert("You don't have permission");
-      }else {
+      } else {
         alert("Login not success");
       }
     }).catch(err => {

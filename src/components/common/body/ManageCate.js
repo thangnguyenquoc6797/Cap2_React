@@ -244,7 +244,6 @@ class ManageCate extends Component {
                 value={this.state.selectedName}
                 onChange={this.handleChangInputEditCate}
               />
-
             </InputGroup>
           </Modal.Body>
           <Modal.Footer>
