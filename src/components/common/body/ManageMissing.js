@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import { getMissingReport } from '../../../api/missingapi'
 
 class ManageMissing extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      missing: []
+    }
+  }
+
+  componentDidMount() {
+    if (this.state.missing.length === 0) {
+      getMissingReport().then(res => {
+        this.setState({ missing: res.data })
+      })
+    }
+  }
+
   render() {
+    const { missing } = this.state;
     return (
       <div>
         <Sidebar />
         {/* Missing person */}
         <div id="right-panel" className="right-panel">
           <div className="content">
-            <div className="row">
-              <div className="col-xl-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="box-title">Missing Person </h4>
-                  </div>
-                  <div className="card-body--">
-                    <div className="table-stats order-table ov-h">
-                      <table className="table ">
+            <div className="animated fadeIn">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-header">
+                      <strong className="card-title">Manage Missing Report</strong>
+                      <button id="AddButton" className="btn btn-primary">Add Missing Report</button>
+                    </div>
+                    <div className="card-body">
+                      <table id="bootstrap-data-table" className="table table-striped table-bordered">
                         <thead>
                           <tr>
                             <th>ID</th>
@@ -27,29 +45,30 @@ class ManageMissing extends Component {
                             <th>Time</th>
                             <th>Phonenumber</th>
                             <th>Id User</th>
-                            <th className="text-center">Status</th>
+                            <th className="text-center">Action</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td> #5469 </td>
-                            <td className="avatar">
-                              <div className="round-img">
-                                {/* &lt;%= link_to "#" do %&gt;
-                                    &lt;%= image_tag "avatar/1.jpg", class: "rounded-circle" %&gt;
-                                    &lt;% end %&gt; */}
-                              </div>
-                            </td>
-                            <td>  <span className="name">Louis Stanley</span> </td>
-                            <td> <span className="product">iMax</span> </td>
-                            <td><span className="count">231</span></td>
-                            <td><span className="count">231</span></td>
-                            <td><span className="count">231</span></td>
-                            <td>
-                              <span className="badge badge-complete">Complete</span>
-                            </td>
-                          </tr>
-                        </tbody>
+                        {
+                          missing.length > 0 && (
+                            missing.map((getMissingReport, index) => {
+                              return <tbody key={index}>
+                                <tr>
+                                  <td> {getMissingReport.id} </td>
+                                  <td>  </td>
+                                  <td> {getMissingReport.title} </td>
+                                  <td> {getMissingReport.description} </td>
+                                  <td> {getMissingReport.created_at} </td>
+                                  <td> {getMissingReport.phone_number} </td>
+                                  <td> {getMissingReport.user_id} </td>
+                                  <td>
+                                    <button className="ml-3 fa fa-edit"></button>
+                                    <button className="ml-3 fa fa-trash"></button>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            })
+                          )
+                        }
                       </table>
                     </div>
                   </div>
