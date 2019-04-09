@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getMissingReport } from '../../../api/missingapi'
+import { getMissingReport, deleteMissingReport } from '../../../api/missingapi'
+import { Modal, Button } from 'react-bootstrap';
 
 class ManageMissing extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      missing: []
+      missing: [],
+      selectedID: '',
+      shouldShowDelete: false
     }
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -16,6 +21,29 @@ class ManageMissing extends Component {
         this.setState({ missing: res.data })
       })
     }
+  }
+
+  /* Modal pop up delete */
+  handleShowDelete = (id) => {
+    this.setState({
+      selectedID: id,
+      shouldShowDelete: true
+    })
+  }
+
+  handleCloseDelete(){
+    this.setState({
+      shouldShowDelete: false
+    })
+  }
+
+  handleDelete(){
+    deleteMissingReport(this.state.selectedID).then(res => {
+      getMissingReport().then(res => {
+        this.setState({missing: res.data})
+      })
+    })
+    this.handleCloseDelete()
   }
 
   render() {
@@ -62,7 +90,7 @@ class ManageMissing extends Component {
                                   <td> {getMissingReport.user_id} </td>
                                   <td>
                                     <button className="ml-3 fa fa-edit"></button>
-                                    <button className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowDelete(getMissingReport.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
@@ -77,6 +105,21 @@ class ManageMissing extends Component {
             </div>
           </div>
         </div>
+        {/* Modal show delete */}
+        <Modal show={this.state.shouldShowDelete} onHide={this.handleCloseDelete}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete This Missing Person Report</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseDelete}>
+              Close
+                        </Button>
+            <Button variant="primary" onClick={this.handleDelete}>
+              Delete
+                        </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

@@ -42,6 +42,9 @@ class Sidebar extends Component {
                     <li><i className="fa fa-comments" />
                       <Link to="/comments">Comment</Link>
                     </li>
+                    <li><i className="fa fa-comments" />
+                      <Link to="/roles">Role</Link>
+                    </li>
                   </ul>
                 </li>
                 <li className="menu-title">Account</li>{/* /.menu-title */}
