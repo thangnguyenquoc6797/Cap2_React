@@ -102,7 +102,7 @@ class ManageCrime extends Component {
     return (
       <div>
         <Sidebar />
-        {/* Manage Cate */}
+        {/* Manage Crime */}
         <div id="right-panel" className="right-panel">
           <div className="content">
             <div className="animated fadeIn">
