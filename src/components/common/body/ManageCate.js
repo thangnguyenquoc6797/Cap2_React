@@ -122,9 +122,6 @@ class ManageCate extends Component {
   }
 
 
-
-
-
   handleAddCate() {
     const categories = {};
     if (this.state.category_name.length > 0) {
@@ -249,10 +246,10 @@ class ManageCate extends Component {
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleCloseEdit}>
               Close
-                        </Button>
+            </Button>
             <Button variant="primary" onClick={this.handleEdit}>
               Edit
-                        </Button>
+            </Button>
           </Modal.Footer>
         </Modal>
       </div>

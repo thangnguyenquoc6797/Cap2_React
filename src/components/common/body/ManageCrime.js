@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { getCrimeReports, deleteCrimeReport } from '../../../api/crimesapi';
-import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
+import {getCategories} from '../../../api/categoriesapi';
+import { Modal, Button, InputGroup, FormControl, Form, ButtonToolbar } from 'react-bootstrap';
 
 class ManageCrime extends Component {
   constructor(props) {
     super(props)
     this.state = {
       crimes: [],
+      categories: [],
       shouldShowDelete: false,
       shouldShowAdd: false,
       selectedID: ''
@@ -21,9 +23,14 @@ class ManageCrime extends Component {
     if (this.state.crimes.length === 0) {
       getCrimeReports().then(res => {
         this.setState({ crimes: res.data })
-        console.log(res.data)
       })
     }
+  }
+
+  handleGetCategories(){
+    getCategories().then(res =>{
+      this.setState({categories: res.data})
+    })
   }
 
   /* Modal pop up delete */
@@ -54,7 +61,8 @@ class ManageCrime extends Component {
   /* Close modal pop up delete */
 
   /* Modal pop up add crime*/
-  handleShowAdd(){
+  handleShowAdd() {
+    this.handleGetCategories()
     this.setState({
       shouldShowAdd: true
     })
@@ -67,8 +75,30 @@ class ManageCrime extends Component {
   }
   /* Close modal pop up add  crime*/
 
+  /* Add crime*/
+  handleChangInputTitleAddCrime = event => {
+    this.setState({
+      crime_title: event.target.value
+    })
+  }
+
+  handleChangInputCateAddCrime = event => {
+    this.setState({
+      crime_category: event.target.value
+    })
+  }
+
+  handleChangInputContentAddCrime = event => {
+    this.setState({
+      crime_content: event.target.value
+    })
+  }
+
+  /* CLOSE Add crime*/
+
   render() {
     const { crimes } = this.state;
+    const {categories} = this.state;
     return (
       <div>
         <Sidebar />
@@ -120,7 +150,6 @@ class ManageCrime extends Component {
                             })
                           )
                         }
-
                       </table>
                     </div>
                   </div>
@@ -151,16 +180,44 @@ class ManageCrime extends Component {
             <Modal.Title>Add crime report</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="inputGroup-sizing-default">Title</InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl
-                aria-label="Default"
-                aria-describedby="inputGroup-sizing-default"
-
-              />
-            </InputGroup>
+            <Form>
+              <Form.Group controlId="exampleForm.ControlInput1">
+                <Form.Label>Title</Form.Label>
+                <Form.Control type="email" placeholder="Title of post" 
+                  value={this.state.crime_title}
+                  onChange={this.handleChangInputTitleAddCrime}
+                />
+              </Form.Group>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Crime Category</Form.Label>
+                <Form.Control as="select" value={this.state.crime_category} onChange={this.handleChangInputCateAddCrime}>
+                  {
+                    categories.map((getCategories, index) => {
+                      return <option key={index}> {getCategories.name_category} </option>
+                    })
+                  }                 
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Area</Form.Label>
+                <Form.Control as="select">
+                  <option>1</option>
+                  <option>2</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="exampleForm.ControlTextarea1">
+                <Form.Label>Content</Form.Label>
+                <Form.Control as="textarea" rows="3" 
+                  value={this.state.crime_content}
+                  onChange={this.handleChangInputContentAddCrime}
+                />
+              </Form.Group>
+              <ButtonToolbar>
+                <Button variant="primary" size="sm">
+                  CHOOSE IMAGE
+                </Button>
+              </ButtonToolbar>
+            </Form>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleCloseAdd}>
@@ -171,6 +228,7 @@ class ManageCrime extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
+        {/* CLOSE Modal Show add crime report */}
       </div>
     );
   }
