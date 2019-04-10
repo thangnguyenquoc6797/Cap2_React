@@ -15,8 +15,10 @@ class CrimeReportForm extends Component {
       crime_content: '',
       crime_area: 'Hải Châu',
       crime_img: '',
-      isLoading: false
+      isLoading: false,
+      message: {}
     }
+    this.validate = this.validate.bind(this)
   }
 
   handleGetCategories() {
@@ -41,6 +43,19 @@ class CrimeReportForm extends Component {
   componentDidMount() {
     this.handleGetCategories();
   }
+
+  validate() {
+    let message = {};
+    if (this.state.crime_title.length === 0) {
+      message["title"] = "Title must better than 5"
+    }else if (this.state.crime_content.length <= 10) {
+      message["description"] = "Description must better than 10"
+    }
+    this.setState({
+      message: message
+    })
+  }
+
   /* Add crime*/
   handleChangInputTitleAddCrime = event => {
     this.setState({
@@ -57,15 +72,23 @@ class CrimeReportForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const crime_report = {};
-    crime_report["title"] = this.state.crime_title;
-    crime_report["area"] = this.state.crime_area;
-    crime_report["category_id"] = this.state.crime_category;
-    crime_report["description"] = this.state.crime_content;
-    crime_report["user_id"] = sessionStorage.getItem("user_id");
-    addCrimeReport(crime_report).then(res => {
-      alert(res.data["message"])
-    })
-
+    if (!this.state.crime_category) {
+      this.setState({
+        crime_category: this.state.categories[0].id
+      })
+    }
+    if (this.state.message || this.state.isLoading) {
+      alert("Please fill full information");
+    }else{
+      crime_report["title"] = this.state.crime_title;
+      crime_report["area"] = this.state.crime_area;
+      crime_report["category_id"] = this.state.crime_category;
+      crime_report["description"] = this.state.crime_content;
+      crime_report["user_id"] = sessionStorage.getItem("user_id");
+      addCrimeReport(crime_report).then(res => {
+        alert(res.data["message"])
+      })
+    }
   }
 
   handleChangInputCateAddCrime = event => {
@@ -81,8 +104,11 @@ class CrimeReportForm extends Component {
   }
 
   handleChangInputContentAddCrime = event => {
+    let message = {};
+    message["description"] = '';
     this.setState({
-      crime_content: event.target.value
+      crime_content: event.target.value,
+      message: message
     })
   }
 
@@ -110,7 +136,8 @@ class CrimeReportForm extends Component {
                         {/* Name */}
                         <div className="md-form mt-3">
                           <strong>Title</strong>
-                          <input type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
+                          <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
+                          <p className="text-danger">{this.state.message["title"]}</p>
                         </div>
 
                         {/* E-mail */}
@@ -118,7 +145,12 @@ class CrimeReportForm extends Component {
                           <div className="md-form mt-3 col-md-6">
                             <strong>Area</strong>
                             <select className="form-control" onChange={this.handleChangInputAreaAddCrime}>
-                              <option defaultValue="1">Hải Châu</option>
+                              <option value="Hải Châu">Hải Châu</option>
+                              <option value="Cẩm Lệ">Cẩm Lệ</option>
+                              <option value="Liên Chiểu">Liên Chiểu</option>
+                              <option value="Thanh Khê">Thanh Khê</option>
+                              <option value="Sơn Trà">Sơn Trà</option>
+                              <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
                             </select>
                           </div>
                           {/* Subject */}
@@ -139,7 +171,8 @@ class CrimeReportForm extends Component {
                         {/*Message*/}
                         <div className="form-group mt-3">
                           <strong>Discription</strong>
-                          <textarea className="form-control" onChange={this.handleChangInputContentAddCrime} />
+                          <textarea className="form-control" onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
+                          <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
                         <div className="form-group">
