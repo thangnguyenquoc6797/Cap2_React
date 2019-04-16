@@ -49,8 +49,8 @@ class CrimeReportForm extends Component {
 
   validate() {
     let message = {};
-    if (this.state.crime_title.length <=5 || this.state.crime_title.length >=50) {
-      message["title"] = "Title must better than 5 and less than 50"
+    if (this.state.crime_title.length < 5 || this.state.crime_title.length > 50) {
+      message["title"] = "Title must be between 5 to 50 characters"
     } else if (this.state.crime_content.length <= 10) {
       message["description"] = "Description must better than 10"
     }
@@ -80,7 +80,7 @@ class CrimeReportForm extends Component {
       this.setState({
         crime_category: this.state.categories[0].id
       })
-    }else if(this.state.message.length > 0){
+    } else if (this.state.message.length > 0) {
       alert("Fail")
     }
     else {
@@ -220,7 +220,7 @@ class CrimeReportForm extends Component {
             <Modal.Title>Message</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Post Crime Report Successfull
+            Add Post Crime Report Successfull
           </Modal.Body>
           <Modal.Footer>
             <Link to="/crimes" variant="secondary" >
