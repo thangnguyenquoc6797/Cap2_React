@@ -48,7 +48,7 @@ class CrimeReportForm extends Component {
     let message = {};
     if (this.state.crime_title.length === 0) {
       message["title"] = "Title must better than 5"
-    }else if (this.state.crime_content.length <= 10) {
+    } else if (this.state.crime_content.length <= 10) {
       message["description"] = "Description must better than 10"
     }
     this.setState({
@@ -77,18 +77,18 @@ class CrimeReportForm extends Component {
         crime_category: this.state.categories[0].id
       })
     }
-    if (this.state.message || this.state.isLoading) {
-      alert("Please fill full information");
-    }else{
+    else {
       crime_report["title"] = this.state.crime_title;
       crime_report["area"] = this.state.crime_area;
       crime_report["category_id"] = this.state.crime_category;
       crime_report["description"] = this.state.crime_content;
+      crime_report["image"] = this.state.crime_img;
       crime_report["user_id"] = sessionStorage.getItem("user_id");
       addCrimeReport(crime_report).then(res => {
         alert(res.data["message"])
       })
     }
+
   }
 
   handleChangInputCateAddCrime = event => {
@@ -140,7 +140,7 @@ class CrimeReportForm extends Component {
                           <p className="text-danger">{this.state.message["title"]}</p>
                         </div>
 
-                        {/* E-mail */}
+                        {/* Area */}
                         <div className="row">
                           <div className="md-form mt-3 col-md-6">
                             <strong>Area</strong>
@@ -153,8 +153,8 @@ class CrimeReportForm extends Component {
                               <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
                             </select>
                           </div>
-                          {/* Subject */}
 
+                          {/* Crime category */}
                           <div className="form-group mt-3 col-md-6">
                             <strong>Category</strong>
                             <select className="form-control" onChange={this.handleChangInputCateAddCrime}>
@@ -168,6 +168,7 @@ class CrimeReportForm extends Component {
                             </select>
                           </div>
                         </div>
+
                         {/*Message*/}
                         <div className="form-group mt-3">
                           <strong>Discription</strong>
@@ -175,11 +176,14 @@ class CrimeReportForm extends Component {
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
+                        {/*Image*/}
                         <div className="form-group">
                           <strong className="col-form-label">Image Discription</strong>
                           {
                             this.state.crime_img ?
-                              <img src={this.state.crime_img} width="150px" height="100px" /> :
+                              <p>
+                              <img src={this.state.crime_img} width="150px" height="100px" /> 
+                              </p>:
                               <div className="col-md-12">
                                 <input type="file"
                                   className="custom-file-input"

@@ -2512,3 +2512,15 @@ footer.site-footer {
   padding-left: unset;
   padding-right: unset;
 }
+
+#decription{
+  max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#title{
+  max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

@@ -3,7 +3,7 @@ import Sidebar from '../sidebar/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { getCrimeReports, deleteCrimeReport } from '../../../api/crimesapi';
 import { getCategories } from '../../../api/categoriesapi';
-import { Modal, Button, InputGroup, FormControl, Form, ButtonToolbar, FormGroup } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 class ManageCrime extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class ManageCrime extends Component {
     if (this.state.crimes.length === 0) {
       getCrimeReports().then(res => {
         this.setState({ crimes: res.data })
+        console.log(this.state.crimes)
       })
     }
   }
@@ -134,10 +135,10 @@ class ManageCrime extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getCrimeReports.id} </td>
-                                  <td>  </td>
+                                  <td> <img src={getCrimeReports.image} /> </td>
                                   <td> {getCrimeReports.area} </td>
-                                  <td> {getCrimeReports.title} </td>
-                                  <td> {getCrimeReports.description} </td>
+                                  <td id="title" > {getCrimeReports.title} </td>
+                                  <td id="decription" > {getCrimeReports.description} </td>
                                   <td> {getCrimeReports.created_at} </td>
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
