@@ -3,6 +3,8 @@ import Sidebar from '../sidebar/Sidebar';
 import { uploadImage } from '../../../api/imgurapi';
 import { addMissingReport } from '../../../api/missingapi';
 import ReactLoading from 'react-loading';
+import { Modal, Button } from 'react-bootstrap';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 class MissingReportForm extends Component {
   constructor(props) {
@@ -14,7 +16,8 @@ class MissingReportForm extends Component {
       missing_phone: '',
       missing_img: '',
       isLoading: false,
-      message: {}
+      message: {},
+      shouldShowSuccess: false
     }
     this.validate = this.validate.bind(this)
   }
@@ -34,10 +37,12 @@ class MissingReportForm extends Component {
 
   validate() {
     let message = {};
-    if (this.state.missing_title.length === 0) {
-      message["title"] = "Title must better than 5"
+    if (this.state.missing_title.length < 5 || this.state.missing_title.length > 50) {
+      message["title"] = "Title must be between 5 to 50 characters"
     } else if (this.state.missing_content.length <= 10) {
       message["description"] = "Description must better than 10"
+    } else if (this.state.missing_phone.length > 12 || this.state.missing_phone.length < 10) {
+      message["phone"] = "Phone number must be between 10 to 12 characters"
     }
     this.setState({
       message: message
@@ -54,15 +59,21 @@ class MissingReportForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const missing_report = {};
-    missing_report["title"] = this.state.missing_title;
-    missing_report["description"] = this.state.missing_content;
-    missing_report["phone_number"] = this.state.missing_phone;
-    missing_report["image"] = this.state.missing_img;
-    missing_report["user_id"] = sessionStorage.getItem("user_id");
-    addMissingReport(missing_report).then(res => {
-      alert(res.data["message"])
-    })
-
+    this.validate();
+    if (this.state.message.length > 0) {
+      alert("Fail")
+    } else {
+      missing_report["title"] = this.state.missing_title;
+      missing_report["description"] = this.state.missing_content;
+      missing_report["phone_number"] = this.state.missing_phone;
+      missing_report["image"] = this.state.missing_img;
+      missing_report["user_id"] = sessionStorage.getItem("user_id");
+      addMissingReport(missing_report).then(res => {
+        this.setState({
+          shouldShowSuccess: true
+        })
+      })
+    }
   }
 
 
@@ -110,8 +121,8 @@ class MissingReportForm extends Component {
 
                         {/*Discription*/}
                         <div className="form-group mt-3">
-                          <strong>Discription</strong>
-                          <textarea className="form-control" onBlur={this.validate} onChange={this.handleChangInputContentAddMissing} />
+                          <strong>Description</strong>
+                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddMissing} />
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
@@ -119,7 +130,7 @@ class MissingReportForm extends Component {
                         <div className="md-form mt-3">
                           <strong>Phone Number</strong>
                           <input onBlur={this.validate} required type="text" onChange={this.handleChangInputPhoneAddMissing} className="form-control" />
-                          <p className="text-danger">{this.state.message["title"]}</p>
+                          <p className="text-danger">{this.state.message["phone"]}</p>
                         </div>
 
                         <div className="form-group">
@@ -153,6 +164,19 @@ class MissingReportForm extends Component {
             </div>
           </div>
         </div>
+        <Modal show={this.state.shouldShowSuccess}>
+          <Modal.Header closeButton>
+            <Modal.Title>Message</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Add Missing Person Report Successfull
+          </Modal.Body>
+          <Modal.Footer>
+            <Link to="/missings" variant="secondary" >
+              Close
+            </Link>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
