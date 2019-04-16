@@ -4,6 +4,8 @@ import { getCategories } from '../../../api/categoriesapi';
 import { uploadImage } from '../../../api/imgurapi';
 import { addCrimeReport } from '../../../api/crimesapi';
 import ReactLoading from 'react-loading';
+import { Modal, Button } from 'react-bootstrap';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 class CrimeReportForm extends Component {
   constructor(props) {
@@ -16,7 +18,8 @@ class CrimeReportForm extends Component {
       crime_area: 'Hải Châu',
       crime_img: '',
       isLoading: false,
-      message: {}
+      message: {},
+      shouldShowSuccess: false,
     }
     this.validate = this.validate.bind(this)
   }
@@ -46,8 +49,8 @@ class CrimeReportForm extends Component {
 
   validate() {
     let message = {};
-    if (this.state.crime_title.length === 0) {
-      message["title"] = "Title must better than 5"
+    if (this.state.crime_title.length <=5 || this.state.crime_title.length >=50) {
+      message["title"] = "Title must better than 5 and less than 50"
     } else if (this.state.crime_content.length <= 10) {
       message["description"] = "Description must better than 10"
     }
@@ -72,10 +75,13 @@ class CrimeReportForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const crime_report = {};
+    this.validate();
     if (!this.state.crime_category) {
       this.setState({
         crime_category: this.state.categories[0].id
       })
+    }else if(this.state.message.length > 0){
+      alert("Fail")
     }
     else {
       crime_report["title"] = this.state.crime_title;
@@ -85,10 +91,11 @@ class CrimeReportForm extends Component {
       crime_report["image"] = this.state.crime_img;
       crime_report["user_id"] = sessionStorage.getItem("user_id");
       addCrimeReport(crime_report).then(res => {
-        alert(res.data["message"])
+        this.setState({
+          shouldShowSuccess: true
+        })
       })
     }
-
   }
 
   handleChangInputCateAddCrime = event => {
@@ -171,8 +178,8 @@ class CrimeReportForm extends Component {
 
                         {/*Message*/}
                         <div className="form-group mt-3">
-                          <strong>Discription</strong>
-                          <textarea className="form-control" onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
+                          <strong>Description</strong>
+                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
@@ -182,8 +189,8 @@ class CrimeReportForm extends Component {
                           {
                             this.state.crime_img ?
                               <p>
-                              <img src={this.state.crime_img} width="150px" height="100px" /> 
-                              </p>:
+                                <img src={this.state.crime_img} width="150px" height="100px" />
+                              </p> :
                               <div className="col-md-12">
                                 <input type="file"
                                   className="custom-file-input"
@@ -208,6 +215,19 @@ class CrimeReportForm extends Component {
             </div>
           </div>
         </div>
+        <Modal show={this.state.shouldShowSuccess}>
+          <Modal.Header closeButton>
+            <Modal.Title>Message</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Post Crime Report Successfull
+          </Modal.Body>
+          <Modal.Footer>
+            <Link to="/crimes" variant="secondary" >
+              Close
+            </Link>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
