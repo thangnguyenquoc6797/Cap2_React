@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { getMissingReport, deleteMissingReport } from '../../../api/missingapi'
 import { Modal, Button } from 'react-bootstrap';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 class ManageMissing extends Component {
   constructor(props) {
@@ -31,16 +32,16 @@ class ManageMissing extends Component {
     })
   }
 
-  handleCloseDelete(){
+  handleCloseDelete() {
     this.setState({
       shouldShowDelete: false
     })
   }
 
-  handleDelete(){
+  handleDelete() {
     deleteMissingReport(this.state.selectedID).then(res => {
       getMissingReport().then(res => {
-        this.setState({missing: res.data})
+        this.setState({ missing: res.data })
       })
     })
     this.handleCloseDelete()
@@ -60,7 +61,7 @@ class ManageMissing extends Component {
                   <div className="card">
                     <div className="card-header">
                       <strong className="card-title">Manage Missing Report</strong>
-                      <button id="AddButton" className="btn btn-primary">Add Missing Report</button>
+                      <Link to={"/missing-form"} id="AddButton" className="btn btn-primary">Add Missing Report</Link>
                     </div>
                     <div className="card-body">
                       <table id="bootstrap-data-table" className="table table-striped table-bordered">
@@ -82,9 +83,9 @@ class ManageMissing extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getMissingReport.id} </td>
-                                  <td>  </td>
-                                  <td> {getMissingReport.title} </td>
-                                  <td> {getMissingReport.description} </td>
+                                  <td> <img src={getMissingReport.image} /> </td>
+                                  <td id="title" > {getMissingReport.title} </td>
+                                  <td id="decription" > {getMissingReport.description} </td>
                                   <td> {getMissingReport.created_at} </td>
                                   <td> {getMissingReport.phone_number} </td>
                                   <td> {getMissingReport.user_id} </td>

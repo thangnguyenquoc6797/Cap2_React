@@ -13,6 +13,7 @@ import ManageHotline from './components/common/body/ManageHotline';
 import ManageComment from './components/common/body/ManageComment';
 import ManageRole from './components/common/body/ManageRole';
 import CrimeReportForm from './components/common/body/CrimeReportForm';
+import MissingReportForm from './components/common/body/MissingReportForm';
 
 class App extends Component {
 
@@ -31,6 +32,7 @@ class App extends Component {
           <Route path="/comments" component={ManageComment} />
           <Route path="/roles" component={ManageRole} />
           <Route path="/report-form" component={CrimeReportForm}/>
+          <Route path="/missing-form" component={MissingReportForm} />
         </Switch>
       )
     }else {
