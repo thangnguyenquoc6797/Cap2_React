@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { getCrimeReports, deleteCrimeReport } from '../../../api/crimesapi';
-import {getCategories} from '../../../api/categoriesapi';
-import { Modal, Button, InputGroup, FormControl, Form, ButtonToolbar } from 'react-bootstrap';
+import { getCategories } from '../../../api/categoriesapi';
+import { Modal, Button, InputGroup, FormControl, Form, ButtonToolbar, FormGroup } from 'react-bootstrap';
 
 class ManageCrime extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class ManageCrime extends Component {
       categories: [],
       shouldShowDelete: false,
       shouldShowAdd: false,
-      selectedID: ''
+      selectedID: '',
     }
     this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -27,9 +28,9 @@ class ManageCrime extends Component {
     }
   }
 
-  handleGetCategories(){
-    getCategories().then(res =>{
-      this.setState({categories: res.data})
+  handleGetCategories() {
+    getCategories().then(res => {
+      this.setState({ categories: res.data })
     })
   }
 
@@ -98,7 +99,6 @@ class ManageCrime extends Component {
 
   render() {
     const { crimes } = this.state;
-    const {categories} = this.state;
     return (
       <div>
         <Sidebar />
@@ -111,7 +111,7 @@ class ManageCrime extends Component {
                   <div className="card">
                     <div className="card-header">
                       <strong className="card-title">Manage Crime Report</strong>
-                      <button onClick={() => { this.handleShowAdd() }} id="AddButton" className="btn btn-primary">Add Crime Report</button>
+                      <Link to={"/report-form"} id="AddButton" className="btn btn-primary">Add Crime Report</Link>
                     </div>
                     <div className="card-body">
                       <table id="bootstrap-data-table" className="table table-striped table-bordered">
@@ -173,62 +173,6 @@ class ManageCrime extends Component {
                         </Button>
           </Modal.Footer>
         </Modal>
-
-        {/* Modal Show add crime report */}
-        <Modal show={this.state.shouldShowAdd} onHide={this.handleCloseAdd}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add crime report</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Title</Form.Label>
-                <Form.Control type="email" placeholder="Title of post" 
-                  value={this.state.crime_title}
-                  onChange={this.handleChangInputTitleAddCrime}
-                />
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Crime Category</Form.Label>
-                <Form.Control as="select" value={this.state.crime_category} onChange={this.handleChangInputCateAddCrime}>
-                  {
-                    categories.map((getCategories, index) => {
-                      return <option key={index}> {getCategories.name_category} </option>
-                    })
-                  }                 
-                </Form.Control>
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Area</Form.Label>
-                <Form.Control as="select">
-                  <option>1</option>
-                  <option>2</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlTextarea1">
-                <Form.Label>Content</Form.Label>
-                <Form.Control as="textarea" rows="3" 
-                  value={this.state.crime_content}
-                  onChange={this.handleChangInputContentAddCrime}
-                />
-              </Form.Group>
-              <ButtonToolbar>
-                <Button variant="primary" size="sm">
-                  CHOOSE IMAGE
-                </Button>
-              </ButtonToolbar>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleCloseAdd}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.handleAdd}>
-              Submit
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        {/* CLOSE Modal Show add crime report */}
       </div>
     );
   }
