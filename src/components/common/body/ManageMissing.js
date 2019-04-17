@@ -83,7 +83,7 @@ class ManageMissing extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getMissingReport.id} </td>
-                                  <td> <img src={getMissingReport.image} /> </td>
+                                  <td> <img src={getMissingReport.image} width="150px" height="100px"/> </td>
                                   <td id="title" > {getMissingReport.title} </td>
                                   <td id="decription" > {getMissingReport.description} </td>
                                   <td> {getMissingReport.created_at} </td>
