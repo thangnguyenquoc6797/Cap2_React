@@ -34,7 +34,7 @@ class App extends Component {
           <Route path="/roles" component={ManageRole} />
           <Route path="/report-form" component={CrimeReportForm}/>
           <Route path="/missing-form" component={MissingReportForm} />
-          <Route path="/edit-crime" component={EditCrimeReportForm} />
+          <Route path="/edit-crime/:crime_id" component={EditCrimeReportForm} />
         </Switch>
       )
     }else {

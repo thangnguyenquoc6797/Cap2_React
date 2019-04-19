@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { getCrimeReports, deleteCrimeReport, getCrimeReportsByID } from '../../../api/crimesapi';
-import { getCategories } from '../../../api/categoriesapi';
+import { getCategories, getCategoriesbyID } from '../../../api/categoriesapi';
 import { Modal, Button } from 'react-bootstrap';
 
 class ManageCrime extends Component {
@@ -14,6 +14,7 @@ class ManageCrime extends Component {
       shouldShowDelete: false,
       shouldShowAdd: false,
       selectedID: '',
+      crime_ID: {},
     }
     this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -143,7 +144,7 @@ class ManageCrime extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getCrimeReports.id} </td>
-                                  <td> <img src={getCrimeReports.image} width="150px" height="100px"/> </td>
+                                  <td> <img src={getCrimeReports.image} width="150px" height="100px" /> </td>
                                   <td> {getCrimeReports.area} </td>
                                   <td id="title" > {getCrimeReports.title} </td>
                                   <td id="decription" > {getCrimeReports.description} </td>
@@ -151,8 +152,8 @@ class ManageCrime extends Component {
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
                                   <td>
-                                    <Link to={"/edit-crime"} className="ml-3 fa fa-edit"></Link>
-                                    <Link to onClick={() => { this.handleShowDelete(getCrimeReports.id) }} className="ml-3 fa fa-trash"></Link>
+                                    <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: {crimebyID: getCrimeReports} }} className="ml-3 fa fa-edit"></Link>
+                                    <Link onClick={() => { this.handleShowDelete(getCrimeReports.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
                               </tbody>

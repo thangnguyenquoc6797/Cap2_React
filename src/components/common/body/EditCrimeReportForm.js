@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { getCategories } from '../../../api/categoriesapi';
 import { uploadImage } from '../../../api/imgurapi';
-import { addCrimeReport, getCrimeReportsByID, editCrimeReport } from '../../../api/crimesapi';
+import { editCrimeReport, getCrimeReports } from '../../../api/crimesapi';
 import ReactLoading from 'react-loading';
 import { Modal, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
@@ -15,18 +15,56 @@ class EditCrimeReportForm extends Component {
       crime_title: '',
       crime_category: '',
       crime_content: '',
-      crime_area: 'Hải Châu',
+      crime_area: '',
       crime_img: '',
       isLoading: false,
       message: {},
       shouldShowSuccess: false,
+      crime: this.props.location.state.crimebyID,
+
     }
     this.validate = this.validate.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    this.handleGetCategories()
+    this.setState({
+      crime_area: this.state.crime.area,
+      crime_title: this.state.crime.title,
+      crime_content: this.state.crime.description,
+      crime_category: this.state.crime.category_id,
+      crime_img: this.state.crime.image
+    })
   }
 
   handleGetCategories() {
     getCategories().then(res => {
       this.setState({ categories: res.data })
+    })
+  }
+
+  handleChangInputAreaEditCrime = event => {
+    this.setState({
+      crime_area: event.target.value
+    })
+  }
+
+  handleChangInputTitleCrime = event => {
+    this.setState({
+      crime_title: event.target.value
+    })
+  }
+
+  handleChangInputCateEditCrime = event => {
+    this.setState({
+      crime_category: event.target.value
+    })
+  }
+
+  handleChangInputContentEditCrime = event => {
+    this.setState({
+      crime_content: event.target.value
     })
   }
 
@@ -43,8 +81,18 @@ class EditCrimeReportForm extends Component {
   //   })
   // }
 
-  componentDidMount() {
-    this.handleGetCategories();
+  handleSubmit= (event) => {
+    event.preventDefault();
+    
+    const crime = {};
+    if (this.state.crime_title.length > 0 || this.state.crime_content.length > 0) {
+      crime['title'] = this.state.crime_title
+      crime['description'] = this.state.crime_content
+      crime['category_id'] = this.state.crime_category
+      crime['area'] = this.state.crime_area
+
+      editCrimeReport(this.state.crime.id, crime)
+    }
   }
 
   validate() {
@@ -59,67 +107,6 @@ class EditCrimeReportForm extends Component {
     })
   }
 
-  // /* Add crime*/
-  // handleChangInputTitleAddCrime = event => {
-  //   this.setState({
-  //     crime_title: event.target.value
-  //   })
-  // }
-
-  // handleChangInputAreaAddCrime = event => {
-  //   this.setState({
-  //     crime_area: event.target.value
-  //   })
-  // }
-
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const crime_report = {};
-  //   this.validate();
-  //   if (!this.state.crime_category) {
-  //     this.setState({
-  //       crime_category: this.state.categories[0].id
-  //     })
-  //   } else if (this.state.message.length > 0) {
-  //     alert("Fail")
-  //   }
-  //   else {
-  //     crime_report["title"] = this.state.crime_title;
-  //     crime_report["area"] = this.state.crime_area;
-  //     crime_report["category_id"] = this.state.crime_category;
-  //     crime_report["description"] = this.state.crime_content;
-  //     crime_report["image"] = this.state.crime_img;
-  //     crime_report["user_id"] = sessionStorage.getItem("user_id");
-  //     addCrimeReport(crime_report).then(res => {
-  //       this.setState({
-  //         shouldShowSuccess: true
-  //       })
-  //     })
-  //   }
-  // }
-
-  // handleChangInputCateAddCrime = event => {
-  //   this.setState({
-  //     crime_category: event.target.value
-  //   })
-  // }
-
-  // handleChangInputAreaAddCrime = event => {
-  //   this.setState({
-  //     crime_area: event.target.value
-  //   })
-  // }
-
-  // handleChangInputContentAddCrime = event => {
-  //   let message = {};
-  //   message["description"] = '';
-  //   this.setState({
-  //     crime_content: event.target.value,
-  //     message: message
-  //   })
-  // }
-
-  /* CLOSE Add crime*/
 
   render() {
     const { categories } = this.state;
@@ -132,18 +119,18 @@ class EditCrimeReportForm extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="card-header">
-                    <strong className="card-title info-color white-text text-center py-4">Add Crime Report</strong>
+                    <strong className="card-title info-color white-text text-center py-4">Edit Crime Report</strong>
                   </div>
 
                   <div className="card">
                     {/*Card content*/}
                     <div className="card-body px-md-5">
                       {/* Form */}
-                      <form className="text-center" style={{ color: '#757575' }} onSubmit={this.handleSubmit} >
-                        {/* Name */}
+                      <form className="text-center" style={{ color: '#757575' }} >
+                        {/* Title */}
                         <div className="md-form mt-3">
                           <strong>Title</strong>
-                          <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
+                          <input defaultValue={this.state.crime.title} onBlur={this.validate} required onChange={this.handleChangInputTitleCrime} type="text" className="form-control" />
                           <p className="text-danger">{this.state.message["title"]}</p>
                         </div>
 
@@ -151,20 +138,20 @@ class EditCrimeReportForm extends Component {
                         <div className="row">
                           <div className="md-form mt-3 col-md-6">
                             <strong>Area</strong>
-                            <select className="form-control" onChange={this.handleChangInputAreaAddCrime}>
+                            <select defaultValue={this.state.crime.area} className="form-control" onChange={this.handleChangInputAreaEditCrime}>
                               <option value="Hải Châu">Hải Châu</option>
                               <option value="Cẩm Lệ">Cẩm Lệ</option>
                               <option value="Liên Chiểu">Liên Chiểu</option>
                               <option value="Thanh Khê">Thanh Khê</option>
                               <option value="Sơn Trà">Sơn Trà</option>
                               <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
-                            </select>
+                            </select >
                           </div>
 
                           {/* Crime category */}
                           <div className="form-group mt-3 col-md-6">
                             <strong>Category</strong>
-                            <select className="form-control" onChange={this.handleChangInputCateAddCrime}>
+                            <select defaultValue={this.state.crime.category_id} className="form-control" onChange={this.handleChangInputCateEditCrime}>
                               {
                                 categories.length > 0 && (
                                   categories.map((category, index) => {
@@ -176,10 +163,10 @@ class EditCrimeReportForm extends Component {
                           </div>
                         </div>
 
-                        {/*Message*/}
+                        {/*Decription*/}
                         <div className="form-group mt-3">
                           <strong>Description</strong>
-                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
+                          <textarea defaultValue={this.state.crime.description} className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentEditCrime} />
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
@@ -187,25 +174,41 @@ class EditCrimeReportForm extends Component {
                         <div className="form-group">
                           <strong className="col-form-label">Image Discription</strong>
                           {
-                            this.state.crime_img ?
-                              <p>
-                                <img src={this.state.crime_img} width="150px" height="100px" />
-                              </p> :
-                              <div className="col-md-12">
-                                <input type="file"
-                                  className="custom-file-input"
-                                  onChange={this.uploadImage}
-                                  id="uploadImage" />
-                                <label className="custom-file-label">Choose File</label>
-                                {
-                                  this.state.isLoading && (
-                                    <ReactLoading type={"cylon"} color={"black"} height={"1%"} width={"5%"} />
-                                  )
-                                }
+                            this.state.crime.image ?
+                              <div>
+                                <p>
+                                  <img src={this.state.crime.image} width="150px" height="100px" />
+                                </p>
+                                <div className="col-md-12">
+                                  <input type="file"
+                                    className="custom-file-input"
+                                    onChange={this.uploadImage}
+                                    id="uploadImage" />
+                                  <label className="custom-file-label">Choose File</label>
+                                  {
+                                    this.state.isLoading && (
+                                      <ReactLoading type={"cylon"} color={"black"} height={"1%"} width={"5%"} />
+                                    )
+                                  }
+                                </div>
+                              </div> :
+                              <div>
+                                <div className="col-md-12">
+                                  <input type="file"
+                                    className="custom-file-input"
+                                    onChange={this.uploadImage}
+                                    id="uploadImage" />
+                                  <label className="custom-file-label">Choose File</label>
+                                  {
+                                    this.state.isLoading && (
+                                      <ReactLoading type={"cylon"} color={"black"} height={"1%"} width={"5%"} />
+                                    )
+                                  }
+                                </div>
                               </div>
                           }
                         </div>
-                        <button className="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" type="submit">Send</button>
+                        <button onClick={this.handleSubmit} className="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" type="submit">Edit</button>
                       </form>
                       {/* Form */}
                     </div>
