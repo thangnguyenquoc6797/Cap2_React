@@ -188,9 +188,23 @@ class CrimeReportForm extends Component {
                           <strong className="col-form-label">Image Discription</strong>
                           {
                             this.state.crime_img ?
-                              <p>
-                                <img src={this.state.crime_img} width="150px" height="100px" />
-                              </p> :
+                              <div>
+                                <p>
+                                  <img src={this.state.crime_img} width="150px" height="100px" />
+                                </p>
+                                <div className="col-md-12">
+                                  <input type="file"
+                                    className="custom-file-input"
+                                    onChange={this.uploadImage}
+                                    id="uploadImage" />
+                                  <label className="custom-file-label">Choose File</label>
+                                  {
+                                    this.state.isLoading && (
+                                      <ReactLoading type={"cylon"} color={"black"} height={"1%"} width={"5%"} />
+                                    )
+                                  }
+                                </div>
+                              </div> :
                               <div className="col-md-12">
                                 <input type="file"
                                   className="custom-file-input"
