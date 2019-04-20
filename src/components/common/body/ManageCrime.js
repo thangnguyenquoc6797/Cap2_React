@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
-import { getCrimeReports, deleteCrimeReport, getCrimeReportsByID } from '../../../api/crimesapi';
-import { getCategories, getCategoriesbyID } from '../../../api/categoriesapi';
+import { getCrimeReports, deleteCrimeReport } from '../../../api/crimesapi';
+import { getCategories } from '../../../api/categoriesapi';
 import { Modal, Button } from 'react-bootstrap';
 
 class ManageCrime extends Component {
@@ -18,15 +18,6 @@ class ManageCrime extends Component {
     }
     this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleCloseAdd = this.handleCloseAdd.bind(this);
-  }
-
-  handleShowEdit = (id) => {
-    getCrimeReportsByID(id).then(res => {
-      this.setState({
-        selectedID: id
-      })
-    })
   }
 
   componentDidMount() {
@@ -70,21 +61,6 @@ class ManageCrime extends Component {
 
   }
   /* Close modal pop up delete */
-
-  /* Modal pop up add crime*/
-  handleShowAdd() {
-    this.handleGetCategories()
-    this.setState({
-      shouldShowAdd: true
-    })
-  }
-
-  handleCloseAdd() {
-    this.setState({
-      shouldShowAdd: false
-    })
-  }
-  /* Close modal pop up add  crime*/
 
   /* Add crime*/
   handleChangInputTitleAddCrime = event => {
