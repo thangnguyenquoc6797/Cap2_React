@@ -14,6 +14,7 @@ import ManageComment from './components/common/body/ManageComment';
 import ManageRole from './components/common/body/ManageRole';
 import CrimeReportForm from './components/common/body/CrimeReportForm';
 import MissingReportForm from './components/common/body/MissingReportForm';
+import EditCrimeReportForm from './components/common/body/EditCrimeReportForm';
 
 class App extends Component {
 
@@ -33,6 +34,7 @@ class App extends Component {
           <Route path="/roles" component={ManageRole} />
           <Route path="/report-form" component={CrimeReportForm}/>
           <Route path="/missing-form" component={MissingReportForm} />
+          <Route path="/edit-crime/:crime_id" component={EditCrimeReportForm} />
         </Switch>
       )
     }else {

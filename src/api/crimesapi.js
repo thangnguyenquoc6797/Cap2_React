@@ -15,3 +15,13 @@ export async function addCrimeReport(crime) {
     const url = `${HEROKU_URL}/crimes`;
     return await axios.post(url, crime);
 }
+
+export async function editCrimeReport(id, crime){
+    const url = `${HEROKU_URL}/crimes/${id}`;
+    return await axios.put(url, crime);
+}
+
+export async function getCrimeReportsByID(id){
+    const url = `${HEROKU_URL}/crimes/${id}`;
+    return await axios.get(url);
+}
