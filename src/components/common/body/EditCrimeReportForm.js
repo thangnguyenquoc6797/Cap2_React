@@ -21,7 +21,6 @@ class EditCrimeReportForm extends Component {
       message: {},
       shouldShowSuccess: false,
       crime: this.props.location.state.crimebyID,
-
     }
     this.validate = this.validate.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -68,30 +67,34 @@ class EditCrimeReportForm extends Component {
     })
   }
 
-  // uploadImage = (event) => {
-  //   this.setState({
-  //     isLoading: true
-  //   })
-  //   const imgFile = event.target.files[0];
-  //   uploadImage(imgFile).then(response => {
-  //     const imageUrl = response.data.data.link;
-  //     this.setState({ crime_img: imageUrl, isLoading: false })
-  //   }).catch(err => {
-  //     console.log(err)
-  //   })
-  // }
+  uploadImage = (event) => {
+    this.setState({
+      isLoading: true
+    })
+    const imgFile = event.target.files[0];
+    uploadImage(imgFile).then(response => {
+      const imageUrl = response.data.data.link;
+      this.setState({ crime_img: imageUrl, isLoading: false })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
-  handleSubmit= (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    
+
     const crime = {};
     if (this.state.crime_title.length > 0 || this.state.crime_content.length > 0) {
       crime['title'] = this.state.crime_title
       crime['description'] = this.state.crime_content
       crime['category_id'] = this.state.crime_category
       crime['area'] = this.state.crime_area
-
-      editCrimeReport(this.state.crime.id, crime)
+      crime['image'] = this.state.crime_img
+      editCrimeReport(this.state.crime.id, crime).then(res => {
+        this.setState({
+          shouldShowSuccess: true
+        })
+      })
     }
   }
 
@@ -174,7 +177,7 @@ class EditCrimeReportForm extends Component {
                         <div className="form-group">
                           <strong className="col-form-label">Image Discription</strong>
                           {
-                            this.state.crime.image ?
+                            this.state.crime.image &&
                               <div>
                                 <p>
                                   <img src={this.state.crime.image} width="150px" height="100px" />
@@ -191,21 +194,7 @@ class EditCrimeReportForm extends Component {
                                     )
                                   }
                                 </div>
-                              </div> :
-                              <div>
-                                <div className="col-md-12">
-                                  <input type="file"
-                                    className="custom-file-input"
-                                    onChange={this.uploadImage}
-                                    id="uploadImage" />
-                                  <label className="custom-file-label">Choose File</label>
-                                  {
-                                    this.state.isLoading && (
-                                      <ReactLoading type={"cylon"} color={"black"} height={"1%"} width={"5%"} />
-                                    )
-                                  }
-                                </div>
-                              </div>
+                              </div> 
                           }
                         </div>
                         <button onClick={this.handleSubmit} className="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" type="submit">Edit</button>
@@ -218,6 +207,19 @@ class EditCrimeReportForm extends Component {
             </div>
           </div>
         </div>
+        <Modal show={this.state.shouldShowSuccess}>
+          <Modal.Header closeButton>
+            <Modal.Title>Message</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Edit Post Crime Report Successfull
+          </Modal.Body>
+          <Modal.Footer>
+            <Link to="/crimes" variant="secondary" >
+              Close
+            </Link>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
