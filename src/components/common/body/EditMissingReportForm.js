@@ -67,7 +67,8 @@ class EditMissingReportForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const missing = {};
-    if (this.state.missing_title.length > 0 || this.state.missing_content.length > 0 || this.state.missing_phone.length > 0) {
+    this.validate();
+    if (this.state.missing_title.length > 0 && this.state.missing_content.length > 0 && this.state.missing_phone.length > 0) {
       missing['title'] = this.state.missing_title
       missing['description'] = this.state.missing_content
       missing['phone_number'] = this.state.missing_phone
@@ -77,7 +78,7 @@ class EditMissingReportForm extends Component {
           shouldShowSuccess: true
         })
       })
-    }else{
+    }else if (this.state.message.length > 0) {
       alert("Fail")
     }
   }
