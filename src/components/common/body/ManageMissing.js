@@ -90,8 +90,8 @@ class ManageMissing extends Component {
                                   <td> {getMissingReport.phone_number} </td>
                                   <td> {getMissingReport.user_id} </td>
                                   <td>
-                                    <button className="ml-3 fa fa-edit"></button>
-                                    <button onClick={() => { this.handleShowDelete(getMissingReport.id) }} className="ml-3 fa fa-trash"></button>
+                                    <Link to={{ pathname: `/edit-missing/${getMissingReport.id}`, state: {MissingbyID: getMissingReport} }} className="ml-3 fa fa-edit"></Link>
+                                    <Link onClick={() => { this.handleShowDelete(getMissingReport.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
                               </tbody>
