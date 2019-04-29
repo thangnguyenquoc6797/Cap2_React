@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { uploadImage } from '../../../api/imgurapi';
-import { getMissingReportbyID, editMissingReport } from '../../../api/missingapi';
+import {  editMissingReport } from '../../../api/missingapi';
 import ReactLoading from 'react-loading';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 class EditMissingReportForm extends Component {

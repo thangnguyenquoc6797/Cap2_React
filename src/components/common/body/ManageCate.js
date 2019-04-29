@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import Sidebar from '../sidebar/Sidebar';
 import { getCategories, addCategories, deleteCategories, editCategory, getCategoriesbyID } from '../../../api/categoriesapi';
 import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';

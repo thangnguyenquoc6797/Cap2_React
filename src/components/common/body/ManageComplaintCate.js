@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import Sidebar from '../sidebar/Sidebar';
-import { getCategories, addCategories, deleteCategories, editCategory, getCategoriesbyID } from '../../../api/categoriesapi';
+import {getComplaintCategories, addComplaintCate} from '../../../api/complaintcateapi'
 import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
@@ -9,8 +8,8 @@ class ManageComplaintCate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      category_name: '',
-      categories: [],
+      complaint_category_name: '',
+      complaint_categories: [],
       isShowCategory: true,
       shouldShowDelete: false,
       shouldShowEdit: false,
@@ -19,23 +18,19 @@ class ManageComplaintCate extends Component {
     }
     this.handShowInputCategory = this.handShowInputCategory.bind(this);
     this.handleAddCate = this.handleAddCate.bind(this);
-    this.handleShowDelete = this.handleShowDelete.bind(this);
-    this.handleCloseDelete = this.handleCloseDelete.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleShowEdit = this.handleShowEdit.bind(this);
-    this.handleCloseEdit = this.handleCloseEdit.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
   }
 
   componentDidMount() {
-    if (this.state.categories.length === 0) {
-      getCategories().then(res => {
-        this.setState({ categories: res.data })
+    if (this.state.complaint_categories.length === 0) {
+      getComplaintCategories().then(res => {
+        this.setState({ complaint_categories: res.data })
         console.log(res.data)
       }
       );
     }
   }
+
+  /* Function add complaint categories */
 
   handShowInputCategory() {
     this.setState({
@@ -45,95 +40,22 @@ class ManageComplaintCate extends Component {
 
   handleChangInputAddCate = event => {
     this.setState({
-      category_name: event.target.value
+      complaint_category_name: event.target.value
     })
   }
-
-  /* Modal pop up delete */
-  handleShowDelete = (id) => {
-    this.setState({
-      selectedID: id,
-      shouldShowDelete: true
-    })
-  }
-
-  handleCloseDelete() {
-    this.setState({
-      shouldShowDelete: false
-    })
-  }
-
-  handleDelete() {
-    deleteCategories(this.state.selectedID).then(res => {
-      getCategories().then(res => {
-        this.setState({ categories: res.data })
-      }
-      );
-    }
-    );
-    this.handleCloseDelete()
-  }
-
-  /* Modal show edit */
-
-  handleShowEdit = (id) => {
-    getCategoriesbyID(id).then(res => {
-      console.log(res.data)
-      this.setState({
-        selectedID: id,
-        selectedName: res.data.name_category,
-        shouldShowEdit: true
-      })
-    }
-    );
-  }
-
-  // handleShowEdit = (id, name) => {
-  //   this.setState({
-  //     selectedID: id,
-  //     selectedName: name,
-  //     shouldShowEdit: true
-  //   })
-  // }
-
-  handleCloseEdit() {
-    this.setState({
-      shouldShowEdit: false
-    })
-  }
-
-  handleChangInputEditCate = event => {
-    this.setState({
-      selectedName: event.target.value
-    })
-  }
-
-  handleEdit() {
-    const categoriesName = {};
-    if (this.state.selectedName.length > 0) {
-      categoriesName['name_category'] = this.state.selectedName;
-      editCategory(this.state.selectedID, categoriesName).then(res => {
-        getCategories().then(res => {
-          this.setState({ categories: res.data })
-        });
-      });
-    }
-    this.handleCloseEdit()
-  }
-
 
   handleAddCate() {
     const categories = {};
-    if (this.state.category_name.length > 0) {
-      categories['name_category'] = this.state.category_name;
-      addCategories(categories).then(res => {
-        getCategories().then(res => {
-          this.setState({ categories: res.data })
+    if (this.state.complaint_category_name.length > 0) {
+      categories['name'] = this.state.complaint_category_name;
+      addComplaintCate(categories).then(res => {
+        getComplaintCategories().then(res => {
+          this.setState({ complaint_categories: res.data })
           console.log(res.data)
         }
         );
         this.setState({
-          category_name: ''
+          complaint_category_name: ''
         })
       }
       );
@@ -142,11 +64,13 @@ class ManageComplaintCate extends Component {
     }
   }
 
+
+
   render() {
-    const { categories } = this.state;
+    const { complaint_categories } = this.state;
     let btnAdd = "";
     if (this.state.isShowCategory) {
-      btnAdd = <button onClick={this.handShowInputCategory} id="AddButton" type="button" className="btn btn-primary">Add Category</button>
+      btnAdd = <button onClick={this.handShowInputCategory} id="AddButton" type="button" className="btn btn-primary">Add Complaint Category</button>
     } else {
       btnAdd = <button onClick={this.handShowInputCategory} id="AddButton" type="button" className="btn btn-warning">Cancle</button>
     }
@@ -162,7 +86,7 @@ class ManageComplaintCate extends Component {
                 <div className="col-md-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong className="card-title">Manage Categories</strong>
+                      <strong className="card-title">Manage Complaint Categories</strong>
                       {
                         btnAdd
                       }
@@ -170,7 +94,7 @@ class ManageComplaintCate extends Component {
                     {
                       !this.state.isShowCategory &&
                       <div className="input-group mb-3">
-                        <input value={this.state.category_name} onChange={this.handleChangInputAddCate} type="text" className="form-control" placeholder="Category's name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                        <input value={this.state.complaint_category_name} onChange={this.handleChangInputAddCate} type="text" className="form-control" placeholder="Complaint Category's name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                         <div className="input-group-append">
                           <button onClick={this.handleAddCate} className="btn btn-outline-secondary">Submit</button>
                         </div>
@@ -186,15 +110,15 @@ class ManageComplaintCate extends Component {
                           </tr>
                         </thead>
                         {
-                          categories.length > 0 && (
-                            categories.map((getCategories, index) => {
+                          complaint_categories.length > 0 && (
+                            complaint_categories.map((getComplaintCate, index) => {
                               return <tbody key={index}>
                                 <tr>
-                                  <td> {getCategories.id} </td>
-                                  <td> {getCategories.name_category} </td>
+                                  <td> {getComplaintCate.id} </td>
+                                  <td> {getComplaintCate.name} </td>
                                   <td>
-                                    <button onClick={() => { this.handleShowEdit(getCategories.id, getCategories.name_category) }} className="ml-3 fa fa-edit"></button>
-                                    <button onClick={() => { this.handleShowDelete(getCategories.id) }} className="ml-3 fa fa-trash"></button>
+                                    <button  className="ml-3 fa fa-edit"></button>
+                                    <button  className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
