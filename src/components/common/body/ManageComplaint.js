@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getComplaintReport } from '../../../api/complaintapi'
+import { getComplaintReport, deleteComplaintReport } from '../../../api/complaintapi'
 import { Modal, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
@@ -12,8 +12,8 @@ class ManageComplaint extends Component {
       selectedID: '',
       shouldShowDelete: false
     }
-    // this.handleCloseDelete = this.handleCloseDelete.bind(this);
-    // this.handleDelete = this.handleDelete.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -24,28 +24,28 @@ class ManageComplaint extends Component {
     }
   }
 
-  // /* Modal pop up delete */
-  // handleShowDelete = (id) => {
-  //   this.setState({
-  //     selectedID: id,
-  //     shouldShowDelete: true
-  //   })
-  // }
+  /* Modal pop up delete */
+  handleShowDelete = (id) => {
+    this.setState({
+      selectedID: id,
+      shouldShowDelete: true
+    })
+  }
 
-  // handleCloseDelete() {
-  //   this.setState({
-  //     shouldShowDelete: false
-  //   })
-  // }
+  handleCloseDelete() {
+    this.setState({
+      shouldShowDelete: false
+    })
+  }
 
-  // handleDelete() {
-  //   deleteMissingReport(this.state.selectedID).then(res => {
-  //     getMissingReport().then(res => {
-  //       this.setState({ missing: res.data })
-  //     })
-  //   })
-  //   this.handleCloseDelete()
-  // }
+  handleDelete() {
+    deleteComplaintReport(this.state.selectedID).then(res => {
+      getComplaintReport().then(res => {
+        this.setState({ complaint: res.data })
+      })
+    })
+    this.handleCloseDelete()
+  }
 
   render() {
     const { complaint } = this.state;
@@ -83,15 +83,15 @@ class ManageComplaint extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getComplaintReport.id} </td>
-                                  <td> <img src={getComplaintReport.image} width="150px" height="100px"/> </td>
+                                  <td> <img src={getComplaintReport.image} width="150px" height="100px" /> </td>
                                   <td id="title" > {getComplaintReport.title} </td>
                                   <td id="decription" > {getComplaintReport.content} </td>
                                   <td> {getComplaintReport.created_at} </td>
                                   <td> {getComplaintReport.complaint_categories_id} </td>
                                   <td> {getComplaintReport.user_id} </td>
                                   <td>
-                                    <Link  className="ml-3 fa fa-edit"></Link>
-                                    <Link  className="ml-3 fa fa-trash"></Link>
+                                    <Link className="ml-3 fa fa-edit"></Link>
+                                    <Link onClick={() => { this.handleShowDelete(getComplaintReport.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
                               </tbody>
@@ -109,7 +109,7 @@ class ManageComplaint extends Component {
         {/* Modal show delete */}
         <Modal show={this.state.shouldShowDelete} onHide={this.handleCloseDelete}>
           <Modal.Header closeButton>
-            <Modal.Title>Delete This Missing Person Report</Modal.Title>
+            <Modal.Title>Delete This Complaint Report</Modal.Title>
           </Modal.Header>
           <Modal.Body>Are you sure?</Modal.Body>
           <Modal.Footer>

@@ -128,7 +128,7 @@ class ManageCrime extends Component {
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
                                   <td>
-                                    <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: {crimebyID: getCrimeReports} }} className="ml-3 fa fa-edit"></Link>
+                                    <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
                                     <Link onClick={() => { this.handleShowDelete(getCrimeReports.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
