@@ -25,13 +25,19 @@ class Sidebar extends Component {
                   <a href="none" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-cogs" />Elements</a>
                   <ul className="sub-menu children dropdown-menu">
                     <li><i className="fa fa-puzzle-piece" />
-                      <Link to="/categories">Category</Link>
+                      <Link to="/categories">Crime Category</Link>
                     </li>
                     <li><i className="fa fa-puzzle-piece" />
                       <Link to="/crimes">Crime Report</Link>
                     </li>
                     <li><i className="fa fa-id-badge" />
                       <Link to="/missings">Missing Report</Link>
+                    </li>
+                    <li><i className="fa fa-puzzle-piece" />
+                      <Link to="/complaintcategorys">Complaint Category</Link>
+                    </li>
+                    <li><i className="fa fa-id-badge" />
+                      <Link to="/complaints">Complaint Report</Link>
                     </li>
                     <li><i className="fa fa-user" />
                       <Link to="/users">User</Link>
