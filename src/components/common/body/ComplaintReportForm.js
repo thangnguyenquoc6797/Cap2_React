@@ -48,9 +48,9 @@ class ComplaintReportForm extends Component {
 
   validate() {
     let message = {};
-    if (this.state.crime_title.length < 5 || this.state.crime_title.length > 50) {
+    if (this.state.complaint_title.length < 5 || this.state.complaint_title.length > 50) {
       message["title"] = "Title must be between 5 to 50 characters"
-    } else if (this.state.crime_content.length <= 10) {
+    } else if (this.state.complaint_content.length <= 10) {
       message["description"] = "Description must better than 10"
     }
     this.setState({
@@ -58,31 +58,31 @@ class ComplaintReportForm extends Component {
     })
   }
 
-  /* Add crime*/
-  handleChangInputTitleAddCrime = event => {
+  /* Add complaint*/
+  handleChangInputTitleAddcomplaint = event => {
     this.setState({
-      crime_title: event.target.value
+      complaint_title: event.target.value
     })
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const crime_report = {};
+    const complaint_report = {};
     this.validate();
-    if (!this.state.crime_category) {
+    if (!this.state.complaint_category) {
       this.setState({
-        crime_category: this.state.categories[0].id
+        complaint_category: this.state.categories[0].id
       })
     } else if (this.state.message.length > 0) {
       alert("Fail")
     }
     else {
-      crime_report["title"] = this.state.crime_title;
-      crime_report["category_id"] = this.state.crime_category;
-      crime_report["description"] = this.state.crime_content;
-      crime_report["image"] = this.state.crime_img;
-      crime_report["user_id"] = sessionStorage.getItem("user_id");
-      addCrimeReport(crime_report).then(res => {
+      complaint_report["title"] = this.state.complaint_title;
+      complaint_report["complaint_categories_id"] = this.state.complaint_category;
+      complaint_report["content"] = this.state.complaint_content;
+      complaint_report["image"] = this.state.complaint_img;
+      complaint_report["user_id"] = sessionStorage.getItem("user_id");
+      addComplaintReport(complaint_report).then(res => {
         this.setState({
           shouldShowSuccess: true
         })
@@ -90,22 +90,22 @@ class ComplaintReportForm extends Component {
     }
   }
 
-  handleChangInputCateAddCrime = event => {
+  handleChangInputCateAddcomplaint = event => {
     this.setState({
-      crime_category: event.target.value
+      complaint_category: event.target.value
     })
   }
 
-  handleChangInputContentAddCrime = event => {
+  handleChangInputContentAddcomplaint = event => {
     let message = {};
     message["description"] = '';
     this.setState({
-      crime_content: event.target.value,
+      complaint_content: event.target.value,
       message: message
     })
   }
 
-  /* CLOSE Add crime*/
+  /* CLOSE Add complaint*/
 
   render() {
     const { categories } = this.state;
@@ -118,7 +118,7 @@ class ComplaintReportForm extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="card-header">
-                    <strong className="card-title info-color white-text text-center py-4">Add Crime Report</strong>
+                    <strong className="card-title info-color white-text text-center py-4">Add Complaint Report</strong>
                   </div>
 
                   <div className="card">
@@ -131,14 +131,14 @@ class ComplaintReportForm extends Component {
                           {/* Title */}
                           <div className="form-group mt-3 col-md-6">
                             <strong>Title</strong>
-                            <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
+                            <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddcomplaint} className="form-control" />
                             <p className="text-danger">{this.state.message["title"]}</p>
                           </div>
 
-                          {/* Crime category */}
+                          {/* complaint category */}
                           <div className="form-group mt-3 col-md-6">
                             <strong>Category</strong>
-                            <select className="form-control" onChange={this.handleChangInputCateAddCrime}>
+                            <select className="form-control" onChange={this.handleChangInputCateAddcomplaint}>
                               {
                                 categories.length > 0 && (
                                   categories.map((category, index) => {
@@ -153,7 +153,7 @@ class ComplaintReportForm extends Component {
                         {/*Message*/}
                         <div className="form-group mt-3">
                           <strong>Description</strong>
-                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
+                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddcomplaint} />
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
@@ -161,10 +161,10 @@ class ComplaintReportForm extends Component {
                         <div className="form-group">
                           <strong className="col-form-label">Image Discription</strong>
                           {
-                            this.state.crime_img ?
+                            this.state.complaint_img ?
                               <div>
                                 <p>
-                                  <img src={this.state.crime_img} width="150px" height="100px" />
+                                  <img src={this.state.complaint_img} width="150px" height="100px" />
                                 </p>
                                 <div className="col-md-12">
                                   <input type="file"
