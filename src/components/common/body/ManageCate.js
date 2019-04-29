@@ -77,7 +77,6 @@ class ManageCate extends Component {
 
   handleShowEdit = (id) => {
     getCategoriesbyID(id).then(res => {
-      console.log(res.data)
       this.setState({
         selectedID: id,
         selectedName: res.data.name_category,
@@ -86,14 +85,6 @@ class ManageCate extends Component {
     }
     );
   }
-
-  // handleShowEdit = (id, name) => {
-  //   this.setState({
-  //     selectedID: id,
-  //     selectedName: name,
-  //     shouldShowEdit: true
-  //   })
-  // }
 
   handleCloseEdit() {
     this.setState({
