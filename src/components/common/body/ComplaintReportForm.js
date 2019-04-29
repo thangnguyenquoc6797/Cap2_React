@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getCategories } from '../../../api/categoriesapi';
+import { getComplaintCategories } from '../../../api/complaintcateapi';
 import { uploadImage } from '../../../api/imgurapi';
-import { addCrimeReport } from '../../../api/crimesapi';
+import { addComplaintReport } from '../../../api/complaintapi';
 import ReactLoading from 'react-loading';
 import { Modal } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
-class CrimeReportForm extends Component {
+class ComplaintReportForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       categories: [],
-      crime_title: '',
-      crime_category: '',
-      crime_content: '',
-      crime_area: 'Hải Châu',
-      crime_img: '',
+      complaint_title: '',
+      complaint_category: '',
+      complaint_content: '',
+      complaint_img: '',
       isLoading: false,
       message: {},
       shouldShowSuccess: false,
@@ -25,7 +24,7 @@ class CrimeReportForm extends Component {
   }
 
   handleGetCategories() {
-    getCategories().then(res => {
+    getComplaintCategories().then(res => {
       this.setState({ categories: res.data })
     })
   }
@@ -37,7 +36,7 @@ class CrimeReportForm extends Component {
     const imgFile = event.target.files[0];
     uploadImage(imgFile).then(response => {
       const imageUrl = response.data.data.link;
-      this.setState({ crime_img: imageUrl, isLoading: false })
+      this.setState({ complaint_img: imageUrl, isLoading: false })
     }).catch(err => {
       console.log(err)
     })
@@ -66,12 +65,6 @@ class CrimeReportForm extends Component {
     })
   }
 
-  handleChangInputAreaAddCrime = event => {
-    this.setState({
-      crime_area: event.target.value
-    })
-  }
-
   handleSubmit = (event) => {
     event.preventDefault();
     const crime_report = {};
@@ -85,7 +78,6 @@ class CrimeReportForm extends Component {
     }
     else {
       crime_report["title"] = this.state.crime_title;
-      crime_report["area"] = this.state.crime_area;
       crime_report["category_id"] = this.state.crime_category;
       crime_report["description"] = this.state.crime_content;
       crime_report["image"] = this.state.crime_img;
@@ -101,12 +93,6 @@ class CrimeReportForm extends Component {
   handleChangInputCateAddCrime = event => {
     this.setState({
       crime_category: event.target.value
-    })
-  }
-
-  handleChangInputAreaAddCrime = event => {
-    this.setState({
-      crime_area: event.target.value
     })
   }
 
@@ -140,25 +126,13 @@ class CrimeReportForm extends Component {
                     <div className="card-body px-md-5">
                       {/* Form */}
                       <form className="text-center" style={{ color: '#757575' }} onSubmit={this.handleSubmit} >
-                        {/* Name */}
-                        <div className="md-form mt-3">
-                          <strong>Title</strong>
-                          <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
-                          <p className="text-danger">{this.state.message["title"]}</p>
-                        </div>
 
-                        {/* Area */}
                         <div className="row">
-                          <div className="md-form mt-3 col-md-6">
-                            <strong>Area</strong>
-                            <select className="form-control" onChange={this.handleChangInputAreaAddCrime}>
-                              <option value="Hải Châu">Hải Châu</option>
-                              <option value="Cẩm Lệ">Cẩm Lệ</option>
-                              <option value="Liên Chiểu">Liên Chiểu</option>
-                              <option value="Thanh Khê">Thanh Khê</option>
-                              <option value="Sơn Trà">Sơn Trà</option>
-                              <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
-                            </select>
+                          {/* Title */}
+                          <div className="form-group mt-3 col-md-6">
+                            <strong>Title</strong>
+                            <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
+                            <p className="text-danger">{this.state.message["title"]}</p>
                           </div>
 
                           {/* Crime category */}
@@ -168,7 +142,7 @@ class CrimeReportForm extends Component {
                               {
                                 categories.length > 0 && (
                                   categories.map((category, index) => {
-                                    return (<option key={index} value={category.id}>{category.name_category}</option>)
+                                    return (<option key={index} value={category.id}>{category.name}</option>)
                                   })
                                 )
                               }
@@ -234,10 +208,10 @@ class CrimeReportForm extends Component {
             <Modal.Title>Message</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Add Post Crime Report Successfull
+            Add Post Complaint Report Successfull
           </Modal.Body>
           <Modal.Footer>
-            <Link to="/crimes" variant="secondary" >
+            <Link to="/complaints" variant="secondary" >
               Close
             </Link>
           </Modal.Footer>
@@ -246,4 +220,4 @@ class CrimeReportForm extends Component {
     );
   }
 }
-export default CrimeReportForm;
+export default ComplaintReportForm;

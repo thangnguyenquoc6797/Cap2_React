@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getMissingReport, deleteMissingReport } from '../../../api/missingapi'
+import { getComplaintReport } from '../../../api/complaintapi'
 import { Modal, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
@@ -8,47 +8,47 @@ class ManageComplaint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      missing: [],
+      complaint: [],
       selectedID: '',
       shouldShowDelete: false
     }
-    this.handleCloseDelete = this.handleCloseDelete.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    // this.handleCloseDelete = this.handleCloseDelete.bind(this);
+    // this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
-    if (this.state.missing.length === 0) {
-      getMissingReport().then(res => {
-        this.setState({ missing: res.data })
+    if (this.state.complaint.length === 0) {
+      getComplaintReport().then(res => {
+        this.setState({ complaint: res.data })
       })
     }
   }
 
-  /* Modal pop up delete */
-  handleShowDelete = (id) => {
-    this.setState({
-      selectedID: id,
-      shouldShowDelete: true
-    })
-  }
+  // /* Modal pop up delete */
+  // handleShowDelete = (id) => {
+  //   this.setState({
+  //     selectedID: id,
+  //     shouldShowDelete: true
+  //   })
+  // }
 
-  handleCloseDelete() {
-    this.setState({
-      shouldShowDelete: false
-    })
-  }
+  // handleCloseDelete() {
+  //   this.setState({
+  //     shouldShowDelete: false
+  //   })
+  // }
 
-  handleDelete() {
-    deleteMissingReport(this.state.selectedID).then(res => {
-      getMissingReport().then(res => {
-        this.setState({ missing: res.data })
-      })
-    })
-    this.handleCloseDelete()
-  }
+  // handleDelete() {
+  //   deleteMissingReport(this.state.selectedID).then(res => {
+  //     getMissingReport().then(res => {
+  //       this.setState({ missing: res.data })
+  //     })
+  //   })
+  //   this.handleCloseDelete()
+  // }
 
   render() {
-    const { missing } = this.state;
+    const { complaint } = this.state;
     return (
       <div>
         <Sidebar />
@@ -60,8 +60,8 @@ class ManageComplaint extends Component {
                 <div className="col-md-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong className="card-title">Manage Missing Report</strong>
-                      <Link to={"/missing-form"} id="AddButton" className="btn btn-primary">Add Missing Report</Link>
+                      <strong className="card-title">Manage Complaint Report</strong>
+                      <Link to={"/complaint-form"} id="AddButton" className="btn btn-primary">Add Complaint Report</Link>
                     </div>
                     <div className="card-body">
                       <table id="bootstrap-data-table" className="table table-striped table-bordered">
@@ -72,26 +72,26 @@ class ManageComplaint extends Component {
                             <th>Title</th>
                             <th>Description</th>
                             <th>Time</th>
-                            <th>Phonenumber</th>
+                            <th>Category</th>
                             <th>Id User</th>
                             <th className="text-center">Action</th>
                           </tr>
                         </thead>
                         {
-                          missing.length > 0 && (
-                            missing.map((getMissingReport, index) => {
+                          complaint.length > 0 && (
+                            complaint.map((getComplaintReport, index) => {
                               return <tbody key={index}>
                                 <tr>
-                                  <td> {getMissingReport.id} </td>
-                                  <td> <img src={getMissingReport.image} width="150px" height="100px"/> </td>
-                                  <td id="title" > {getMissingReport.title} </td>
-                                  <td id="decription" > {getMissingReport.description} </td>
-                                  <td> {getMissingReport.created_at} </td>
-                                  <td> {getMissingReport.phone_number} </td>
-                                  <td> {getMissingReport.user_id} </td>
+                                  <td> {getComplaintReport.id} </td>
+                                  <td> <img src={getComplaintReport.image} width="150px" height="100px"/> </td>
+                                  <td id="title" > {getComplaintReport.title} </td>
+                                  <td id="decription" > {getComplaintReport.content} </td>
+                                  <td> {getComplaintReport.created_at} </td>
+                                  <td> {getComplaintReport.complaint_categories_id} </td>
+                                  <td> {getComplaintReport.user_id} </td>
                                   <td>
-                                    <Link to={{ pathname: `/edit-missing/${getMissingReport.id}`, state: {MissingbyID: getMissingReport} }} className="ml-3 fa fa-edit"></Link>
-                                    <Link onClick={() => { this.handleShowDelete(getMissingReport.id) }} className="ml-3 fa fa-trash"></Link>
+                                    <Link  className="ml-3 fa fa-edit"></Link>
+                                    <Link  className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
                               </tbody>
