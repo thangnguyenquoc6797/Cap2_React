@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import {getComplaintCategories, addComplaintCate, deleteComplaintCate} from '../../../api/complaintcateapi'
+import {getComplaintCategories, addComplaintCate, deleteComplaintCate, editComplaintCate, getComplaintCategoriesbyID} from '../../../api/complaintcateapi'
 import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
@@ -20,6 +20,9 @@ class ManageComplaintCate extends Component {
     this.handleAddCate = this.handleAddCate.bind(this);
     this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleShowEdit = this.handleShowEdit.bind(this);
+    this.handleCloseEdit = this.handleCloseEdit.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -92,6 +95,42 @@ class ManageComplaintCate extends Component {
     this.handleCloseDelete()
   }
 
+  /* Function edit complaint category */
+
+  handleShowEdit = (id) => {
+    getComplaintCategoriesbyID(id).then(res => {
+      this.setState({
+        selectedID: id,
+        selectedName: res.data.name,
+        shouldShowEdit: true
+      })
+    })
+  }
+
+  handleCloseEdit() {
+    this.setState({
+      shouldShowEdit: false
+    })
+  }
+
+  handleChangInputEditCate = event => {
+    this.setState({
+      selectedName: event.target.value
+    })
+  }
+
+  handleEdit() {
+    const categoriesName = {};
+    if (this.state.selectedName.length > 0) {
+      categoriesName['name'] = this.state.selectedName;
+      editComplaintCate(this.state.selectedID, categoriesName).then(res => {
+        getComplaintCategories().then(res => {
+          this.setState({ complaint_categories: res.data })
+        });
+      });
+    }
+    this.handleCloseEdit()
+  }
 
   render() {
     const { complaint_categories } = this.state;
@@ -144,7 +183,7 @@ class ManageComplaintCate extends Component {
                                   <td> {getComplaintCate.id} </td>
                                   <td> {getComplaintCate.name} </td>
                                   <td>
-                                    <button  className="ml-3 fa fa-edit"></button>
+                                    <button onClick={() => {this.handleShowEdit(getComplaintCate.id, getComplaintCate.name)}} className="ml-3 fa fa-edit"></button>
                                     <button onClick={() => { this.handleShowDelete(getComplaintCate.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
@@ -179,7 +218,7 @@ class ManageComplaintCate extends Component {
         {/* Modal show edit */}
         <Modal show={this.state.shouldShowEdit} onHide={this.handleCloseEdit}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit This Category</Modal.Title>
+            <Modal.Title>Edit This Complaint Category</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <InputGroup className="mb-3">
