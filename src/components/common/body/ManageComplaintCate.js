@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import {getComplaintCategories, addComplaintCate} from '../../../api/complaintcateapi'
+import {getComplaintCategories, addComplaintCate, deleteComplaintCate} from '../../../api/complaintcateapi'
 import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
@@ -18,6 +18,8 @@ class ManageComplaintCate extends Component {
     }
     this.handShowInputCategory = this.handShowInputCategory.bind(this);
     this.handleAddCate = this.handleAddCate.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +66,31 @@ class ManageComplaintCate extends Component {
     }
   }
 
+  /* Function delete complaint category */
+
+  handleShowDelete = (id) => {
+    this.setState({
+      selectedID: id,
+      shouldShowDelete: true
+    })
+  }
+
+  handleCloseDelete() {
+    this.setState({
+      shouldShowDelete: false
+    })
+  }
+
+  handleDelete() {
+    deleteComplaintCate(this.state.selectedID).then(res => {
+      getComplaintCategories().then(res => {
+        this.setState({ complaint_categories: res.data })
+      }
+      );
+    }
+    );
+    this.handleCloseDelete()
+  }
 
 
   render() {
@@ -118,7 +145,7 @@ class ManageComplaintCate extends Component {
                                   <td> {getComplaintCate.name} </td>
                                   <td>
                                     <button  className="ml-3 fa fa-edit"></button>
-                                    <button  className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowDelete(getComplaintCate.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
