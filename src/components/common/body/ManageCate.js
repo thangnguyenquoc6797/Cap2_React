@@ -30,7 +30,6 @@ class ManageCate extends Component {
     if (this.state.categories.length === 0) {
       getCategories().then(res => {
         this.setState({ categories: res.data })
-        console.log(res.data)
       }
       );
     }

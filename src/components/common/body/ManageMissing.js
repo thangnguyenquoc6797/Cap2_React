@@ -47,7 +47,9 @@ class ManageMissing extends Component {
     this.handleCloseDelete()
   }
 
+  
   render() {
+    let user_id = sessionStorage.getItem("user_id");
     const { missing } = this.state;
     return (
       <div>
@@ -90,8 +92,15 @@ class ManageMissing extends Component {
                                   <td> {getMissingReport.phone_number} </td>
                                   <td> {getMissingReport.user_id} </td>
                                   <td>
-                                    <Link to={{ pathname: `/edit-missing/${getMissingReport.id}`, state: {MissingbyID: getMissingReport} }} className="ml-3 fa fa-edit"></Link>
+                                    {
+                                      user_id == getMissingReport.user_id ?
+                                      <div>
+                                        <Link to={{ pathname: `/edit-missing/${getMissingReport.id}`, state: {MissingbyID: getMissingReport} }} className="ml-3 fa fa-edit"></Link>
+                                        
+                                      </div> : null
+                                    }
                                     <Link onClick={() => { this.handleShowDelete(getMissingReport.id) }} className="ml-3 fa fa-trash"></Link>
+                                    
                                   </td>
                                 </tr>
                               </tbody>

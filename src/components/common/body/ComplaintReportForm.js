@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getCategories } from '../../../api/categoriesapi';
+import { getComplaintCategories } from '../../../api/complaintcateapi';
 import { uploadImage } from '../../../api/imgurapi';
-import { addCrimeReport } from '../../../api/crimesapi';
+import { addComplaintReport } from '../../../api/complaintapi';
 import ReactLoading from 'react-loading';
 import { Modal } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
-class CrimeReportForm extends Component {
+class ComplaintReportForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       categories: [],
-      crime_title: '',
-      crime_category: '',
-      crime_content: '',
-      crime_area: 'Hải Châu',
-      crime_img: '',
+      complaint_title: '',
+      complaint_category: '',
+      complaint_content: '',
+      complaint_img: '',
       isLoading: false,
       message: {},
       shouldShowSuccess: false,
@@ -25,7 +24,7 @@ class CrimeReportForm extends Component {
   }
 
   handleGetCategories() {
-    getCategories().then(res => {
+    getComplaintCategories().then(res => {
       this.setState({ categories: res.data })
     })
   }
@@ -37,7 +36,7 @@ class CrimeReportForm extends Component {
     const imgFile = event.target.files[0];
     uploadImage(imgFile).then(response => {
       const imageUrl = response.data.data.link;
-      this.setState({ crime_img: imageUrl, isLoading: false })
+      this.setState({ complaint_img: imageUrl, isLoading: false })
     }).catch(err => {
       console.log(err)
     })
@@ -49,9 +48,9 @@ class CrimeReportForm extends Component {
 
   validate() {
     let message = {};
-    if (this.state.crime_title.length < 5 || this.state.crime_title.length > 50) {
+    if (this.state.complaint_title.length < 5 || this.state.complaint_title.length > 50) {
       message["title"] = "Title must be between 5 to 50 characters"
-    } else if (this.state.crime_content.length <= 10) {
+    } else if (this.state.complaint_content.length <= 10) {
       message["description"] = "Description must better than 10"
     }
     this.setState({
@@ -59,38 +58,31 @@ class CrimeReportForm extends Component {
     })
   }
 
-  /* Add crime*/
-  handleChangInputTitleAddCrime = event => {
+  /* Add complaint*/
+  handleChangInputTitleAddcomplaint = event => {
     this.setState({
-      crime_title: event.target.value
-    })
-  }
-
-  handleChangInputAreaAddCrime = event => {
-    this.setState({
-      crime_area: event.target.value
+      complaint_title: event.target.value
     })
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const crime_report = {};
+    const complaint_report = {};
     this.validate();
-    if (!this.state.crime_category) {
+    if (!this.state.complaint_category) {
       this.setState({
-        crime_category: this.state.categories[0].id
+        complaint_category: this.state.categories[0].id
       })
     } else if (this.state.message.length > 0) {
       alert("Fail")
     }
     else {
-      crime_report["title"] = this.state.crime_title;
-      crime_report["area"] = this.state.crime_area;
-      crime_report["category_id"] = this.state.crime_category;
-      crime_report["description"] = this.state.crime_content;
-      crime_report["image"] = this.state.crime_img;
-      crime_report["user_id"] = sessionStorage.getItem("user_id");
-      addCrimeReport(crime_report).then(res => {
+      complaint_report["title"] = this.state.complaint_title;
+      complaint_report["complaint_categories_id"] = this.state.complaint_category;
+      complaint_report["content"] = this.state.complaint_content;
+      complaint_report["image"] = this.state.complaint_img;
+      complaint_report["user_id"] = sessionStorage.getItem("user_id");
+      addComplaintReport(complaint_report).then(res => {
         this.setState({
           shouldShowSuccess: true
         })
@@ -98,28 +90,22 @@ class CrimeReportForm extends Component {
     }
   }
 
-  handleChangInputCateAddCrime = event => {
+  handleChangInputCateAddcomplaint = event => {
     this.setState({
-      crime_category: event.target.value
+      complaint_category: event.target.value
     })
   }
 
-  handleChangInputAreaAddCrime = event => {
-    this.setState({
-      crime_area: event.target.value
-    })
-  }
-
-  handleChangInputContentAddCrime = event => {
+  handleChangInputContentAddcomplaint = event => {
     let message = {};
     message["description"] = '';
     this.setState({
-      crime_content: event.target.value,
+      complaint_content: event.target.value,
       message: message
     })
   }
 
-  /* CLOSE Add crime*/
+  /* CLOSE Add complaint*/
 
   render() {
     const { categories } = this.state;
@@ -132,7 +118,7 @@ class CrimeReportForm extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="card-header">
-                    <strong className="card-title info-color white-text text-center py-4">Add Crime Report</strong>
+                    <strong className="card-title info-color white-text text-center py-4">Add Complaint Report</strong>
                   </div>
 
                   <div className="card">
@@ -140,35 +126,23 @@ class CrimeReportForm extends Component {
                     <div className="card-body px-md-5">
                       {/* Form */}
                       <form className="text-center" style={{ color: '#757575' }} onSubmit={this.handleSubmit} >
-                        {/* Name */}
-                        <div className="md-form mt-3">
-                          <strong>Title</strong>
-                          <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddCrime} className="form-control" />
-                          <p className="text-danger">{this.state.message["title"]}</p>
-                        </div>
 
-                        {/* Area */}
                         <div className="row">
-                          <div className="md-form mt-3 col-md-6">
-                            <strong>Area</strong>
-                            <select className="form-control" onChange={this.handleChangInputAreaAddCrime}>
-                              <option value="Hải Châu">Hải Châu</option>
-                              <option value="Cẩm Lệ">Cẩm Lệ</option>
-                              <option value="Liên Chiểu">Liên Chiểu</option>
-                              <option value="Thanh Khê">Thanh Khê</option>
-                              <option value="Sơn Trà">Sơn Trà</option>
-                              <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
-                            </select>
+                          {/* Title */}
+                          <div className="form-group mt-3 col-md-6">
+                            <strong>Title</strong>
+                            <input onBlur={this.validate} required type="text" onChange={this.handleChangInputTitleAddcomplaint} className="form-control" />
+                            <p className="text-danger">{this.state.message["title"]}</p>
                           </div>
 
-                          {/* Crime category */}
+                          {/* complaint category */}
                           <div className="form-group mt-3 col-md-6">
                             <strong>Category</strong>
-                            <select className="form-control" onChange={this.handleChangInputCateAddCrime}>
+                            <select className="form-control" onChange={this.handleChangInputCateAddcomplaint}>
                               {
                                 categories.length > 0 && (
                                   categories.map((category, index) => {
-                                    return (<option key={index} value={category.id}>{category.name_category}</option>)
+                                    return (<option key={index} value={category.id}>{category.name}</option>)
                                   })
                                 )
                               }
@@ -179,7 +153,7 @@ class CrimeReportForm extends Component {
                         {/*Message*/}
                         <div className="form-group mt-3">
                           <strong>Description</strong>
-                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddCrime} />
+                          <textarea className="form-control" required onBlur={this.validate} onChange={this.handleChangInputContentAddcomplaint} />
                           <p className="text-danger">{this.state.message["description"]}</p>
                         </div>
 
@@ -187,10 +161,10 @@ class CrimeReportForm extends Component {
                         <div className="form-group">
                           <strong className="col-form-label">Image Discription</strong>
                           {
-                            this.state.crime_img ?
+                            this.state.complaint_img ?
                               <div>
                                 <p>
-                                  <img src={this.state.crime_img} width="150px" height="100px" />
+                                  <img src={this.state.complaint_img} width="150px" height="100px" />
                                 </p>
                                 <div className="col-md-12">
                                   <input type="file"
@@ -234,10 +208,10 @@ class CrimeReportForm extends Component {
             <Modal.Title>Message</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Add Post Crime Report Successfull
+            Add Post Complaint Report Successfull
           </Modal.Body>
           <Modal.Footer>
-            <Link to="/crimes" variant="secondary" >
+            <Link to="/complaints" variant="secondary" >
               Close
             </Link>
           </Modal.Footer>
@@ -246,4 +220,4 @@ class CrimeReportForm extends Component {
     );
   }
 }
-export default CrimeReportForm;
+export default ComplaintReportForm;
