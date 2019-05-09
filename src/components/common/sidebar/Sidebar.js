@@ -33,12 +33,12 @@ class Sidebar extends Component {
                     <li><i className="fa fa-id-badge" />
                       <Link to="/missings">Missing Report</Link>
                     </li>
-                    <li><i className="fa fa-puzzle-piece" />
+                    {/* <li><i className="fa fa-puzzle-piece" />
                       <Link to="/complaintcategorys">Complaint Category</Link>
                     </li>
                     <li><i className="fa fa-id-badge" />
                       <Link to="/complaints">Complaint Report</Link>
-                    </li>
+                    </li> */}
                     <li><i className="fa fa-user" />
                       <Link to="/users">User</Link>
                     </li>
@@ -58,7 +58,7 @@ class Sidebar extends Component {
                   <a href="none" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-google-plus" />Account</a>
                   <ul className="sub-menu children dropdown-menu">
                     <li><i className="menu-icon fa fa-user-md" />
-                      <a href="none">User Information</a>
+                      <Link to="/profile">User Information</Link>
                     </li>
                     <li><i className="menu-icon fa fa-paper-plane" />
                       <Link onClick={this.handleLogout} to="/">Logout</Link>

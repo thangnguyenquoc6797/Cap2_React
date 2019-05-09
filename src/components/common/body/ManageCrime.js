@@ -24,7 +24,6 @@ class ManageCrime extends Component {
     if (this.state.crimes.length === 0) {
       getCrimeReports().then(res => {
         this.setState({ crimes: res.data })
-        console.log(this.state.crimes)
       })
     }
   }
@@ -84,6 +83,7 @@ class ManageCrime extends Component {
   /* CLOSE Add crime*/
 
   render() {
+    let user_id = sessionStorage.getItem("user_id");
     const { crimes } = this.state;
     return (
       <div>
@@ -128,7 +128,12 @@ class ManageCrime extends Component {
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
                                   <td>
-                                    <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
+                                    {
+                                      user_id == getCrimeReports.user_id ?
+                                      <div>
+                                        <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
+                                      </div> : null
+                                    }
                                     <Link onClick={() => { this.handleShowDelete(getCrimeReports.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
                                 </tr>
