@@ -46,7 +46,7 @@ class Sidebar extends Component {
                       <Link to="/hotlines">Hotline</Link>
                     </li>
                     <li><i className="fa fa-comments" />
-                      <Link to="/comments">Comment</Link>
+                      <Link to="/comment-crimes">Comment Crimes</Link>
                     </li>
                     <li><i className="fa fa-comments" />
                       <Link to="/roles">Role</Link>
