@@ -15,13 +15,17 @@ class ManageHotline extends Component {
       selectedArea: '',
       selectedHotline: '',
       hotline_area: '',
-      hotline_number: ''
+      hotline_number: '',
+      shouldShowDelete: false
     }
     this.handShowInputHotline = this.handShowInputHotline.bind(this);
     this.handleShowEdit = this.handleShowEdit.bind(this);
     this.handleCloseEdit = this.handleCloseEdit.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleAddHotline = this.handleAddHotline.bind(this);
+    this.handleShowDelete = this.handleShowDelete.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -115,6 +119,31 @@ class ManageHotline extends Component {
     }
   }
 
+  /* Modal pop up delete */
+  handleShowDelete = (id) => {
+    this.setState({
+      selectedID: id,
+      shouldShowDelete: true
+    })
+  }
+
+  handleCloseDelete() {
+    this.setState({
+      shouldShowDelete: false
+    })
+  }
+
+  handleDelete() {
+    deleteHotline(this.state.selectedID).then(res => {
+      getHotlines().then(res => {
+        this.setState({ hotlines: res.data })
+      }
+      );
+    }
+    );
+    this.handleCloseDelete()
+  }
+
   render() {
     const { hotlines } = this.state;
     let btnAdd = "";
@@ -169,7 +198,7 @@ class ManageHotline extends Component {
                                   <td> {getHotlines.hotline_number} </td>
                                   <td>
                                     <button onClick={() => { this.handleShowEdit(getHotlines.id) }} className="ml-3 fa fa-edit"></button>
-                                    <button className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowDelete(getHotlines.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
@@ -184,6 +213,22 @@ class ManageHotline extends Component {
             </div>
           </div>
         </div>
+
+        {/* Modal show delete */}
+        <Modal show={this.state.shouldShowDelete} onHide={this.handleCloseDelete}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete This Hotline</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseDelete}>
+              Close
+                        </Button>
+            <Button variant="primary" onClick={this.handleDelete}>
+              Delete
+                        </Button>
+          </Modal.Footer>
+        </Modal>
 
         {/* Modal show edit */}
         <Modal show={this.state.shouldShowEdit} onHide={this.handleCloseEdit}>
