@@ -118,7 +118,6 @@ class ManageCate extends Component {
       addCategories(categories).then(res => {
         getCategories().then(res => {
           this.setState({ categories: res.data })
-          console.log(res.data)
         }
         );
         this.setState({
