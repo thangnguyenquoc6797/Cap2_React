@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { Modal, Button } from 'react-bootstrap';
-import { getCrimeComments, deleteCrimeComments } from '../../../api/commentCrimeApi';
+import { getMissingComments, deleteMissingComments } from '../../../api/commentMissingApi';
 
-class ManageCrimeComments extends Component {
-
+class ManageMissingComments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      crime_comments: [],
+      missing_comments: [],
       shouldShowDelete: false,
       selectedID: ''
     }
@@ -17,9 +16,9 @@ class ManageCrimeComments extends Component {
   }
 
   componentDidMount() {
-    if (this.state.crime_comments.length === 0) {
-      getCrimeComments().then(res => {
-        this.setState({ crime_comments: res.data })
+    if (this.state.missing_comments.length === 0) {
+      getMissingComments().then(res => {
+        this.setState({ missing_comments: res.data })
       })
     }
   }
@@ -39,9 +38,9 @@ class ManageCrimeComments extends Component {
   }
 
   handleDelete() {
-    deleteCrimeComments(this.state.selectedID).then(res => {
-      getCrimeComments().then(res => {
-        this.setState({ crime_comments: res.data })
+    deleteMissingComments(this.state.selectedID).then(res => {
+      getMissingComments().then(res => {
+        this.setState({ missing_comments: res.data })
       })
     }
     );
@@ -49,7 +48,7 @@ class ManageCrimeComments extends Component {
   }
 
   render() {
-    const { crime_comments } = this.state;
+    const { missing_comments } = this.state;
     return (
       <div>
         <Sidebar />
@@ -75,16 +74,16 @@ class ManageCrimeComments extends Component {
                           </tr>
                         </thead>
                         {
-                          crime_comments.length > 0 && (
-                            crime_comments.map((getCrimeComments, index) => {
+                          missing_comments.length > 0 && (
+                            missing_comments.map((getMissingComments, index) => {
                               return <tbody key={index}>
                                 <tr>
-                                  <td> {getCrimeComments.id} </td>
-                                  <td> {getCrimeComments.content} </td>
-                                  <td> {getCrimeComments.user_id} </td>
-                                  <td> {getCrimeComments.crime_id} </td>
+                                  <td> {getMissingComments.id} </td>
+                                  <td> {getMissingComments.content} </td>
+                                  <td> {getMissingComments.user_id} </td>
+                                  <td> {getMissingComments.missing_id} </td>
                                   <td>
-                                    <button onClick={() => { this.handleShowDelete(getCrimeComments.id) }} className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowDelete(getMissingComments.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
@@ -118,4 +117,4 @@ class ManageCrimeComments extends Component {
     );
   }
 }
-export default ManageCrimeComments;
+export default ManageMissingComments;

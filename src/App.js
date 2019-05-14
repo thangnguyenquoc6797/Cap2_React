@@ -19,7 +19,7 @@ import EditMissingReportForm from './components/common/body/EditMissingReportFor
 import ManageComplaint from './components/common/body/ManageComplaint';
 import ManageComplaintCate from './components/common/body/ManageComplaintCate';
 import ComplaintReportForm from './components/common/body/ComplaintReportForm';
-
+import ManageMissingComments from './components/common/body/ManageMissingComments';
 
 class App extends Component {
 
@@ -44,6 +44,7 @@ class App extends Component {
           <Route path="/complaints" component={ManageComplaint} />
           <Route path="/complaint-form" component={ComplaintReportForm} />
           <Route path="/complaintcategorys" component={ManageComplaintCate} />
+          <Route path="/comment-missings" component={ManageMissingComments} />
           {/* <Route path="/profile" component={Profile} /> */}
         </Switch>
       )
@@ -61,5 +62,4 @@ class App extends Component {
     );
   }
 }
-
 export default withRouter(App);
