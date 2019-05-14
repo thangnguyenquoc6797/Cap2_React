@@ -111,6 +111,7 @@ class ManageCrime extends Component {
                             <th>Time</th>
                             <th>Category</th>
                             <th>User</th>
+                            <th>Report</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -128,11 +129,20 @@ class ManageCrime extends Component {
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
                                   <td>
+                                    <Link to={{ pathname: `/report-post-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} >
+                                      {
+                                        getCrimeReports.report === null ?
+                                        0
+                                        : getCrimeReports.report
+                                      }
+                                    </Link>
+                                  </td>
+                                  <td>
                                     {
-                                      user_id == getCrimeReports.user_id ?
-                                      <div>
-                                        <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
-                                      </div> : null
+                                      user_id === getCrimeReports.user_id ?
+                                        <div>
+                                          <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
+                                        </div> : null
                                     }
                                     <Link onClick={() => { this.handleShowDelete(getCrimeReports.id) }} className="ml-3 fa fa-trash"></Link>
                                   </td>
