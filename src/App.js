@@ -10,7 +10,7 @@ import ManageCrime from './components/common/body/ManageCrime';
 import ManageMissing from './components/common/body/ManageMissing';
 import ManageUser from './components/common/body/ManageUser';
 import ManageHotline from './components/common/body/ManageHotline';
-import ManageComment from './components/common/body/ManageComment';
+import ManageCrimeComments from './components/common/body/ManageCrimeComments';
 import ManageRole from './components/common/body/ManageRole';
 import CrimeReportForm from './components/common/body/CrimeReportForm';
 import MissingReportForm from './components/common/body/MissingReportForm';
@@ -19,7 +19,7 @@ import EditMissingReportForm from './components/common/body/EditMissingReportFor
 import ManageComplaint from './components/common/body/ManageComplaint';
 import ManageComplaintCate from './components/common/body/ManageComplaintCate';
 import ComplaintReportForm from './components/common/body/ComplaintReportForm';
-import Profile from './components/common/body/ManageMissingComplaint';
+import ManageMissingComments from './components/common/body/ManageMissingComments';
 
 class App extends Component {
 
@@ -35,7 +35,7 @@ class App extends Component {
           <Route path="/missings" component={ManageMissing} />
           <Route path="/users" component={ManageUser} />
           <Route path="/hotlines" component={ManageHotline} />
-          <Route path="/comments" component={ManageComment} />
+          <Route path="/comment-crimes" component={ManageCrimeComments} />
           <Route path="/roles" component={ManageRole} />
           <Route path="/report-form" component={CrimeReportForm}/>
           <Route path="/missing-form" component={MissingReportForm} />
@@ -44,7 +44,8 @@ class App extends Component {
           <Route path="/complaints" component={ManageComplaint} />
           <Route path="/complaint-form" component={ComplaintReportForm} />
           <Route path="/complaintcategorys" component={ManageComplaintCate} />
-          <Route path="/profile" component={Profile} />
+          <Route path="/comment-missings" component={ManageMissingComments} />
+          {/* <Route path="/profile" component={Profile} /> */}
         </Switch>
       )
     }else {
@@ -61,5 +62,4 @@ class App extends Component {
     );
   }
 }
-
 export default withRouter(App);

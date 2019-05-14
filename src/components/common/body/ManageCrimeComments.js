@@ -1,58 +1,59 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
-import { getUser, deleteUser } from '../../../api/userapi';
 import { Modal, Button } from 'react-bootstrap';
+import { getCrimeComments, deleteCrimeComments } from '../../../api/commentCrimeApi';
 
-class Profile extends Component {
+class ManageCrimeComments extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
-      shouldShow: false,
-      selectIdUser: ''
+      crime_comments: [],
+      shouldShowDelete: false,
+      selectedID: ''
     }
-    this.handleShow = this.handleShow.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
-    if (this.state.users.length === 0) {
-      getUser().then(res => {
-        this.setState({ users: res.data })
-      });
+    if (this.state.crime_comments.length === 0) {
+      getCrimeComments().then(res => {
+        this.setState({ crime_comments: res.data })
+      })
     }
   }
 
-  handleShow = (id) => {
+  /* Modal pop up delete */
+  handleShowDelete = (id) => {
     this.setState({
-      selectIdUser: id,
-      shouldShow: true
+      selectedID: id,
+      shouldShowDelete: true
     })
   }
 
-  handleClose(){
+  handleCloseDelete() {
     this.setState({
-      shouldShow: false
+      shouldShowDelete: false
     })
   }
 
-  handleDelete(){
-    deleteUser(this.state.selectIdUser).then(res => {
-      getUser().then(res => {
-        this.setState({ users: res.data })
-      });
-    })
-    this.handleClose()
+  handleDelete() {
+    deleteCrimeComments(this.state.selectedID).then(res => {
+      getCrimeComments().then(res => {
+        this.setState({ crime_comments: res.data })
+      })
+    }
+    );
+    this.handleCloseDelete()
   }
 
   render() {
-    const { users } = this.state;
+    const { crime_comments } = this.state;
     return (
       <div>
         <Sidebar />
-        {/* Manage User */}
+        {/* Manage Crime Comments */}
         <div id="right-panel" className="right-panel">
           <div className="content">
             <div className="animated fadeIn">
@@ -60,36 +61,30 @@ class Profile extends Component {
                 <div className="col-md-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong className="card-title">Manage User</strong>
+                      <strong className="card-title">Manage Crime Comment</strong>
                     </div>
                     <div className="card-body">
                       <table id="bootstrap-data-table" className="table table-striped table-bordered">
                         <thead>
                           <tr>
                             <th>ID</th>
-                            <th>Email</th>
-                            <th>Full name</th>
-                            <th>Phone number</th>
-                            <th>Address</th>
-                            <th>ID card</th>
-                            <th>Role</th>
+                            <th>Content</th>
+                            <th>ID User</th>
+                            <th>ID Crime</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         {
-                          users.length > 0 && (
-                            users.map((getUser, index) => {
+                          crime_comments.length > 0 && (
+                            crime_comments.map((getCrimeComments, index) => {
                               return <tbody key={index}>
                                 <tr>
-                                  <td> {getUser.id} </td>
-                                  <td> {getUser.email} </td>
-                                  <td> {getUser.fullname} </td>
-                                  <td> {getUser.phone_number} </td>
-                                  <td> {getUser.address} </td>
-                                  <td> {getUser.id_card_number} </td>
-                                  <td> {getUser.role_id} </td>
+                                  <td> {getCrimeComments.id} </td>
+                                  <td> {getCrimeComments.content} </td>
+                                  <td> {getCrimeComments.user_id} </td>
+                                  <td> {getCrimeComments.crime_id} </td>
                                   <td>
-                                    <button onClick={() => { this.handleShow(getUser.id) }} className="ml-3 fa fa-trash"></button>
+                                    <button onClick={() => { this.handleShowDelete(getCrimeComments.id) }} className="ml-3 fa fa-trash"></button>
                                   </td>
                                 </tr>
                               </tbody>
@@ -104,13 +99,14 @@ class Profile extends Component {
             </div>
           </div>
         </div>
-        <Modal show={this.state.shouldShow} onHide={this.handleClose}>
+        {/* Modal show delete */}
+        <Modal show={this.state.shouldShowDelete} onHide={this.handleCloseDelete}>
           <Modal.Header closeButton>
-            <Modal.Title>Delete This Category</Modal.Title>
+            <Modal.Title>Delete This Comment</Modal.Title>
           </Modal.Header>
           <Modal.Body>Are you sure?</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="secondary" onClick={this.handleCloseDelete}>
               Close
                         </Button>
             <Button variant="primary" onClick={this.handleDelete}>
@@ -122,4 +118,4 @@ class Profile extends Component {
     );
   }
 }
-export default Profile;
+export default ManageCrimeComments;
