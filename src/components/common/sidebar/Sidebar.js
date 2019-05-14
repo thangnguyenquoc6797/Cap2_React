@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 class Sidebar extends Component {
 
-  handleLogout(){
+  handleLogout() {
     sessionStorage.removeItem('user_id');
   }
 
@@ -50,6 +50,9 @@ class Sidebar extends Component {
                     </li>
                     <li><i className="fa fa-comments" />
                       <Link to="/comment-missings">Missing Comments</Link>
+                    </li>
+                    <li><i className="fa fa-comments" />
+                      <Link to="/report-category">Report Category</Link>
                     </li>
                     <li><i className="fa fa-comments" />
                       <Link to="/roles">Role</Link>

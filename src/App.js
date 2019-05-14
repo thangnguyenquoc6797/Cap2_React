@@ -20,6 +20,9 @@ import ManageComplaint from './components/common/body/ManageComplaint';
 import ManageComplaintCate from './components/common/body/ManageComplaintCate';
 import ComplaintReportForm from './components/common/body/ComplaintReportForm';
 import ManageMissingComments from './components/common/body/ManageMissingComments';
+import ManageReportCategory from './components/common/body/ManageReportCategory';
+import ShowReportMissing from './components/common/body/ShowReportMissing';
+import ShowReportCrime from './components/common/body/ShowReportCrime';
 
 class App extends Component {
 
@@ -45,6 +48,9 @@ class App extends Component {
           <Route path="/complaint-form" component={ComplaintReportForm} />
           <Route path="/complaintcategorys" component={ManageComplaintCate} />
           <Route path="/comment-missings" component={ManageMissingComments} />
+          <Route path="/report-category" component={ManageReportCategory} />
+          <Route path="/report-post-missing/:post_id" component={ShowReportMissing} />
+          <Route path="/report-post-crime/:post_id" component={ShowReportCrime} />
           {/* <Route path="/profile" component={Profile} /> */}
         </Switch>
       )
