@@ -109,7 +109,6 @@ class EditCrimeReportForm extends Component {
     })
   }
 
-
   render() {
     const { categories } = this.state;
     return (

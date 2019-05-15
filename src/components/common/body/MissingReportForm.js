@@ -51,8 +51,10 @@ class MissingReportForm extends Component {
 
   /* Add missing*/
   handleChangInputTitleAddMissing = event => {
+    let message = {};
+    message["title"] = '';
     this.setState({
-      missing_title: event.target.value
+      missing_title: event.target.value.trim()
     })
   }
 
@@ -81,14 +83,15 @@ class MissingReportForm extends Component {
     let message = {};
     message["description"] = '';
     this.setState({
-      missing_content: event.target.value,
+      missing_content: event.target.value.trim(),
       message: message
     })
   }
 
   handleChangInputPhoneAddMissing = event => {
+    let message = {};
     this.setState({
-      missing_phone: event.target.value
+      missing_phone: event.target.value.trim()
     })
   }
 

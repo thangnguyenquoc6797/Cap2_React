@@ -2524,3 +2524,9 @@ footer.site-footer {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+#time{
+  max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

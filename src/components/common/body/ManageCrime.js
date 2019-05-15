@@ -121,25 +121,32 @@ class ManageCrime extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getCrimeReports.id} </td>
-                                  <td> <img src={getCrimeReports.image} width="150px" height="100px" /> </td>
+                                  <td>
+                                    {
+                                      getCrimeReports.image === "" ?
+                                        <img src="https://pbs.twimg.com/media/CZOy-MjWIAE1T4U.jpg" width="150px" height="100px" />
+                                        :
+                                        <img src={getCrimeReports.image} width="150px" height="100px" />
+                                    }
+                                  </td>
                                   <td> {getCrimeReports.area} </td>
                                   <td id="title" > {getCrimeReports.title} </td>
                                   <td id="decription" > {getCrimeReports.description} </td>
-                                  <td> {getCrimeReports.created_at} </td>
+                                  <td id="time"> {getCrimeReports.created_at} </td>
                                   <td> {getCrimeReports.category_id} </td>
                                   <td> {getCrimeReports.user_id} </td>
                                   <td>
                                     <Link to={{ pathname: `/report-post-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} >
                                       {
                                         getCrimeReports.report === null ?
-                                        0
-                                        : getCrimeReports.report
+                                          0
+                                          : getCrimeReports.report
                                       }
                                     </Link>
                                   </td>
                                   <td>
                                     {
-                                      user_id === getCrimeReports.user_id ?
+                                      user_id == getCrimeReports.user_id ?
                                         <div>
                                           <Link to={{ pathname: `/edit-crime/${getCrimeReports.id}`, state: { crimebyID: getCrimeReports } }} className="ml-3 fa fa-edit"></Link>
                                         </div> : null
