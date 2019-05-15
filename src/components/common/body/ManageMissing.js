@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import { getMissingReport, deleteMissingReport } from '../../../api/missingapi'
-import { getReportByPost, getReport } from '../../../api/reportapi'
 import { Modal, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
@@ -78,7 +77,7 @@ class ManageMissing extends Component {
                             <th>Title</th>
                             <th>Description</th>
                             <th>Time</th>
-                            <th>Phonenumber</th>
+                            <th>Phone Number</th>
                             <th>User</th>
                             <th>Report</th>
                             <th className="text-center">Action</th>
@@ -90,24 +89,31 @@ class ManageMissing extends Component {
                               return <tbody key={index}>
                                 <tr>
                                   <td> {getMissingReport.id} </td>
-                                  <td> <img src={getMissingReport.image} width="150px" height="100px" /> </td>
+                                  <td>
+                                    {
+                                      getMissingReport.image === "" ?
+                                        <img src="https://pbs.twimg.com/media/CZOy-MjWIAE1T4U.jpg" width="150px" height="100px" />
+                                        :
+                                        <img src={getMissingReport.image} width="150px" height="100px" />
+                                    }
+                                  </td>
                                   <td id="title" > {getMissingReport.title} </td>
                                   <td id="decription" > {getMissingReport.description} </td>
-                                  <td> {getMissingReport.created_at} </td>
+                                  <td id="time" > {getMissingReport.created_at} </td>
                                   <td> {getMissingReport.phone_number} </td>
                                   <td> {getMissingReport.user_id} </td>
                                   <td>
                                     <Link to={{ pathname: `/report-post-missing/${getMissingReport.id}`, state: { MissingbyID: getMissingReport } }} >
-                                     {
-                                       getMissingReport.report === null ?
-                                       0
-                                       : getMissingReport.report
-                                     }
+                                      {
+                                        getMissingReport.report === null ?
+                                          0
+                                          : getMissingReport.report
+                                      }
                                     </Link>
                                   </td>
                                   <td>
                                     {
-                                      user_id === getMissingReport.user_id ?
+                                      user_id == getMissingReport.user_id ?
                                         <div>
                                           <Link to={{ pathname: `/edit-missing/${getMissingReport.id}`, state: { MissingbyID: getMissingReport } }} className="ml-3 fa fa-edit"></Link>
                                         </div> : null
